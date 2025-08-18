@@ -240,3 +240,28 @@ cat 0<std_output.txt 1> output.txt
 cat output.txt
 std input
 ```
+## Std Output and Std Error
+```bash
+cat -k hi 2>> error.txt
+cat error.txt 
+cat: invalid option -- 'k'
+Try 'cat --help' for more information.
+```
+
+# Std input , Std output using tee command
+```bash
+date | cut --delimiter=" " --field=1 | tee fullday.txt
+Tuesday
+cat fullday.txt 
+Tuesday
+```
+
+## Tee command allow to print output in file by vertically while using pipe for one commands output will use as input for next command.
+```bash
+date | tee fullday.txt | cut -d " " -f 1
+cat fullday.txt
+Tue 19 Aug 2025 12:45:24 AM IST
+```
+
+- here, tee command will print the output of date to fullday.txt and this output of date will pass to next command for cut and print 1st field like Tue.
+
