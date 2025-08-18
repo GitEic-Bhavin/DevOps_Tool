@@ -113,44 +113,130 @@ find . -name *.tmp -exec mv {} {}.old \;
 find . -mtime +90 -exec ls -l {} \;
 ```
 
-### sort the file and move/rename it with find command
+## sort the file and move/rename it with find command
 ```bash
 find /usr - name S* ls -l -exec mv {} {}.test \;
 find /usr -type f -name "S*" -exec cp {} /target/dir/ /home/einfochips/DevOps_Tool/Linux {}.old \;
 ```
 
-### find and copy whole folder with all files and dir using find command
+## find and copy whole folder with all files and dir using find command
 ```bash
 find /dir/path/ -type f,d -name "*" -exec cp -R {}  /targeted/dir/ \;
 ```
 
-### Find the oldest file using -mitme days.
+## Find the oldest file using -mitme days.
 ```bash
 find /usr/bin -mtime +10 -mtime -90
 ```
 
-### Delete files and folders with keep required files and folders using find command
+## Delete files and folders with keep required files and folders using find command
 ```bash
 find . ! -path "./README.md" ! -path "./kernal.png" ! -path "." -delete
 ```
 
-### find files with ls
+## find files with ls
 ```bash
 find /usr -name S* -ls
 ```
 
-### find files with size
+## find files with size
 ```bash
 find /user -size +10M
 ```
 
-### read file from top
+## read file from top
 ```bash
 head file.txt
 ```
 
-### read file from bottom
+## read file from bottom
 ```bash
 tail file.txt
 tail -10 file.txt ## Will show last 10 lines from bottom of file
+```
+
+# Disk Usage
+**du -k** - Display size in kb.
+**du -h** - Display size in human readable.
+
+# WildCards make easy to matching the files
+## filter the file for ending with .txt
+```bash
+ls -l /path/ *.txt
+```
+## filter the file for starting with character
+```bash
+ls -l abcd.*
+```
+
+## filter for only total character of files
+- README.md . Here total character is 6 README and ending with .md
+```bash
+ls -l ??????.txt
+
+```
+
+# man for manual of any command
+## find manuals for multiple commands
+```bash
+man -a cal pwd
+```
+## find where the command is located
+```bash
+which -a date cal
+/usr/bin/date
+/bin/date
+/usr/bin/cal
+/bin/cal
+```
+
+## search content to manual of commands
+- use -k for serach inside manuals.
+- Search contens like "list directory contents"
+```bash
+man -k "list directory contents"
+
+## OutPut
+dir (1)              - list directory contents
+ls (1)               - list directory contents
+ntfsls (8)           - list directory contents on an NTFS filesystem
+vdir (1)             - list directory contents\
+```
+
+# Std Input and Std Output
+- Std Input is connected to your keyboard for waiting for input
+- Std Output is connected to your terminal to show the result of std input
+
+```bash
+cat - Enter
+ cat - Waiting for your input and whatever you will give input same will give output
+m - Std input
+m - Std output
+^C
+
+# While cat file.txt
+line1
+line2
+```
+
+# Redirect the std input/output
+## std input - 0, std output - 1, std error - 2
+
+- Redirect your all std input of command cat to file std_output.txt
+- use std output - 1 , > - Redirect output.
+
+```bash
+cat 1> std_output.txt
+std input
+^C
+
+cat std_output.txt
+std input
+```
+
+## Take std input from a file and redirect to output.txt
+```bash
+cat 0<std_output.txt 1> output.txt
+cat output.txt
+std input
 ```
