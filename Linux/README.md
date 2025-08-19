@@ -129,6 +129,15 @@ find /dir/path/ -type f,d -name "*" -exec cp -R {}  /targeted/dir/ \;
 find /usr/bin -mtime +10 -mtime -90
 ```
 
+## Find file with depth.
+- Bydefult find will find a file from each and every dir and files from our filesystem.
+- So, the depth i9s unlimited.
+- use **-maxdepth 1** for define the depth.
+
+```bash
+find *.conf -maxdepth 2 
+```
+
 ## Delete files and folders with keep required files and folders using find command
 ```bash
 find . ! -path "./README.md" ! -path "./kernal.png" ! -path "." -delete
@@ -142,6 +151,29 @@ find /usr -name S* -ls
 ## find files with size
 ```bash
 find /user -size +10M
+```
+
+### find file with size between 100k to 5 MB
+```bash
+find ~/ -size +100k size -5M
+```
+
+### find file with size between 100k OR 5 MB
+- Use "o" for condition OR.
+
+```bash
+find ~/ -size +100k -o -size -5M
+```
+
+### find file with size between 100k OR 5 MB and copy all them to another place with interactive mode for secure copy files or required files only.
+- To interactive mode , use "-ok" which will asking for either copy ?
+```bash
+find ~/ -size +100k -o -size -5M -ok -exec cp {} Backup/ \;
+< -exec ... /home/einfochips/ > ? n
+< -exec ... /home/einfochips/JenkinsSlackToken > ? n
+< -exec ... /home/einfochips/my-swayam > ? n
+< -exec ... /home/einfochips/my-swayam/include > ? n
+< -exec ... /home/einfochips/my-swayam/bin > ? 
 ```
 
 ## read file from top
@@ -436,7 +468,72 @@ locate -e docker.service
 
 | Feature     | locate                               | find                                  |
 | ----------- | ------------------------------------ | ------------------------------------- |
-| Speed       | Very fast (uses database)            |    Slower (scans filesystem)          |
+| Speed       | Very fast (uses database)            | Slower (scans filesystem)             |
 | Freshness   | May show deleted files (stale cache) | Always real-time                      |
 | Flexibility | Filename-based only                  | Can search by size, time, perms, etc. |
 
+
+### Sometimes, your locate can't find or locate the newer created files or you can say missing files/deleted files is not updated regulary into db named updatedb.
+### To refrash or update the db use sudo updatedb
+
+```bash
+touch file-updatedb.txt
+locate file-updatedb.txt # should give the output
+"Enter and not seeing any output" due to db is not updated.
+# To update the db , run sudo updatedb
+# Now, try to locate file-updatedb.txt
+
+locate file-updatedb.txt 
+/home/ubuntu/file-updatedb.txt
+```
+
+# Viewing Files
+
+## Reverse the output of read files as vertically
+- use "tac" command
+```bash
+cat error.txt input.txt output.txt std_output.txt 
+# OutPut without tac
+cat: invalid option -- 'k'
+Try 'cat --help' for more information.
+input 1
+input 2
+hello
+std input
+input 1
+input 2
+hello
+std input
+```
+
+```bash
+cat error.txt input.txt output.txt std_output.txt | tac
+# OutPut with tac. tac will make reverse the order of output.
+std input
+hello
+input 2
+input 1
+std input
+hello
+input 2
+input 1
+Try 'cat --help' for more information.
+cat: invalid option -- 'k'
+```
+### Make reverser order as horizontally.
+- Use **re** will make each output line by line as **horizontally**.
+- Ex. **People** will make it reverse from right to left like **elpoep**.
+```bash
+cat input.txt 
+input 1
+input 2
+
+cat input.txt | rev
+1 tupni
+2 tupni
+```
+## use head and tail
+## head first 20 lines then read only 2 line from bottom from head output
+```bash
+head -n20 /path/to/file | tail -n 2
+```
