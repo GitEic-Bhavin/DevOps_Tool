@@ -176,6 +176,55 @@ ls -l ??????.txt
 
 ```
 
+## fileter file with given opions and ending with .txt
+```bash
+ls file[0-9].txt
+file1.txt
+
+ls *[a-z].txt
+awk.txt     bhavin_rsync.txt  message.txt  server_config.txt      testssh.txt
+backup.txt  hello.txt         sed.txt  
+
+ls *[a-z][0-9].txt
+abc1.txt  abc2.txt  abc3.txt  abc4.txt  abc5.txt  abc6.txt  abc7.txt  abc8.txt  abc9.txt  file1.txt
+```
+# Create multiple file and folders
+## Create dir into dir
+- User -p wiht mkdir
+```bash
+mkdir -p dir1/dir2/dir3/dir4
+```
+
+## create multiple files
+```bash
+# use { } and to define range use ..
+file {1..4}.txt
+ls
+file1.txt file2.txt file3.txt file4.txt
+```
+
+## create multiple dirs
+```bash
+# Use { } to define range
+mkdir {jan,feb}{2024..2025}
+#OutPut: 
+feb2024  feb2025  jan2024  jan2025
+```
+## Create multiple files into multiple dirs
+```bash
+touch {jan,feb}{2024..2025}/file{1..10}.txt
+# OutPut
+ls {jan,feb}{2024..2025}/file{1..10}.txt
+feb2024/file10.txt  feb2024/file8.txt   feb2025/file6.txt   jan2024/file4.txt   jan2025/file2.txt
+feb2024/file1.txt   feb2024/file9.txt   feb2025/file7.txt   jan2024/file5.txt   jan2025/file3.txt
+feb2024/file2.txt   feb2025/file10.txt  feb2025/file8.txt   jan2024/file6.txt   jan2025/file4.txt
+feb2024/file3.txt   feb2025/file1.txt   feb2025/file9.txt   jan2024/file7.txt   jan2025/file5.txt
+feb2024/file4.txt   feb2025/file2.txt   jan2024/file10.txt  jan2024/file8.txt   jan2025/file6.txt
+feb2024/file5.txt   feb2025/file3.txt   jan2024/file1.txt   jan2024/file9.txt   jan2025/file7.txt
+feb2024/file6.txt   feb2025/file4.txt   jan2024/file2.txt   jan2025/file10.txt  jan2025/file8.txt
+feb2024/file7.txt   feb2025/file5.txt   jan2024/file3.txt   jan2025/file1.txt   jan2025/file9.txt
+```
+
 # man for manual of any command
 ## find manuals for multiple commands
 ```bash
@@ -265,3 +314,73 @@ Tue 19 Aug 2025 12:45:24 AM IST
 
 - here, tee command will print the output of date to fullday.txt and this output of date will pass to next command for cut and print 1st field like Tue.
 
+## use xargs Command in pipe.
+- xargs allow you to convert piped data into command line arguments for commands that only accept command line arguments.
+- Some commands don’t accept piped input (|), they only work with arguments passed directly.
+- Example:
+```bash
+rm file1 file2 file3
+# works because rm accepts file names as arguments.
+```
+
+- But if you try:
+```bash
+echo "file1 file2 file3" | rm
+# it fails, because rm does not read from stdin (the pipe).
+```
+
+## xargs takes piped input and converts it into arguments for the command.
+```bash
+echo "file1 file2 file3" | xargs rm
+```
+- Delete all .log files found:
+
+```bash
+find . -name "*.log" | xargs rm
+```
+
+  - find outputs file list (stdin).
+
+  - xargs converts them into arguments for rm.
+
+## Try to print date output by echo using xargs.
+```bash
+date | xargs echo
+Tue 19 Aug 2025 12:02:43 PM IST
+```
+## Print hello, currten date using xargs and echo
+```bash
+date | xargs echo "Hello,"
+Hello, Tue 19 Aug 2025 12:08:55 PM IST
+```
+
+# Alias -- to give nickname for long commands
+```bash
+date | tee fulldate.txt | cut -d " " -f 1 | tee day.txt | xargs echo "Hello, today is "
+# OutPut: Hello, today is  Tue
+alias getdats='date | tee fulldate.txt | cut -d " " -f 1 | tee day.txt | xargs echo "Hello, today is "'
+```
+## Now, run alias commands named "getdates"
+```bash
+getdates 
+Hello, today is  Tue
+```
+
+## Now, use alias which will recieve output from "echo 12 2025" and input to thing.txt with one month before , current month and one month after.
+```bash
+alias calmagic="xargs cal -A 1 -B 1 > thing.txt"
+
+# alias is created
+# Now, just pass cal input like "12 2025" to calmegic
+echo "12 2025 | calmegic
+
+cat thing.txt
+November 2025         December 2025          January 2026      
+Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa  
+                   1      1  2  3  4  5  6               1  2  3  
+ 2  3  4  5  6  7  8   7  8  9 10 11 12 13   4  5  6  7  8  9 10  
+ 9 10 11 12 13 14 15  14 15 16 17 18 19 20  11 12 13 14 15 16 17  
+16 17 18 19 20 21 22  21 22 23 24 25 26 27  18 19 20 21 22 23 24  
+23 24 25 26 27 28 29  28 29 30 31           25 26 27 28 29 30 31  
+30     
+```
