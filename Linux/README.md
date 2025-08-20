@@ -537,3 +537,212 @@ cat input.txt | rev
 ```bash
 head -n20 /path/to/file | tail -n 2
 ```
+
+# Software Repository
+## What is Software Repository
+
+  - A central location that stores software packages and metadata (info about version, dependencies, checksums).
+
+  - Used by package managers (like apt in Ubuntu, yum/dnf in RedHat) to install, update, or remove software.
+
+  📦 Software Repo = Library of software packages 
+
+  🛠️ Package Manager = Librarian who fetches books for you
+
+##  Types of Ubuntu Repositories
+
+  `Main` → Free/open-source software officially supported by Canonical.
+
+  Example: apt, ls, systemd.
+
+  `Universe` → Free/open-source but community-maintained, not officially supported. Maintained by ubuntu community
+
+  Example: vlc, gimp, htop.
+
+  `Restricted` → Proprietary but essential software/drivers supported by Canonical.
+               → Includes Propprietary software and dirve for company's specific devices such as wireless cards etc
+
+  Example: nvidia-driver, linux-firmware.
+
+  `Multiverse` → Software restricted by copyright/legal issues.
+
+  Example: unrar, some video codecs, certain games.
+
+### Check the repositor in /etc/apt/sources.list
+```bash
+deb http://archive.ubuntu.com/ubuntu focal main restricted universe multiverse
+```
+
+  - deb → Binary packages (ready to install).
+
+  - http://archive.ubuntu.com/ubuntu → Repo server.
+
+  - focal → Ubuntu release name (20.04 = Focal Fossa, 22.04 = jammy, etc.).
+
+  - main restricted universe multiverse → Repo types Sections enabled.
+
+
+## Distributions codename
+```bash
+lsb_release -a
+# OutPut
+No LSB modules are available.
+Distributor ID:	Ubuntu
+Description:	Ubuntu 20.04.6 LTS
+Release:	20.04
+Codename:	focal
+```
+
+# Searching for pkg using apt
+# How to apt pkg manager is uses "caches" to speed up performance.
+## To search the pkg using apt 
+
+```bash
+# Use apt-cache search "pkg_name"
+
+apt-cache search git
+
+# OutPut
+aspnetcore-runtime-8.0 - Shared Framework for hosting of Microsoft ASP.NET Core applications. It is open source, cross-platform and is supported by Microsoft. We hope you enjoy using it! If you do, please consider joining the active community of developers that are contributing to the project on GitHub (https://github.com/dotnet/aspnetcore). We happily accept issues and PRs.
+aspnetcore-targeting-pack-8.0 - Shared Framework for hosting of Microsoft ASP.NET Core applications. It is open source, cross-platform and is supported by Microsoft. We hope you enjoy using it! If you do, please consider joining the active community of developers that are contributing to the project on GitHub (https://github.com/dotnet/aspnetcore). We happily accept issues and PRs.
+dotnet-apphost-pack-8.0 - Microsoft.NETCore.App.Host 8.0.19
+dotnet-host - Microsoft .NET Host - 9.0.4\
+```
+## To get more informations about pkg
+- Use "show"
+```bash
+
+apt-cache show git
+
+# OutPut
+
+Package: git
+Status: install ok installed
+Priority: optional
+Section: vcs
+Installed-Size: 36036
+Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+Architecture: amd64
+Multi-Arch: foreign
+Version: 1:2.25.1-1ubuntu3.14
+Replaces: git-core (<< 1:1.7.0.4-1.), gitweb (<< 1:1.7.4~rc1)
+Provides: git-completion, git-core
+Depends: libc6 (>= 2.28), libcurl3-gnutls (>= 7.56.1), libexpat1 (>= 2.0.1), libpcre2-8-0 (>= 10.22), zlib1g (>= 1:1.2.0), perl, liberror-perl, git-man (>> 1:2.25.1), git-man (<< 1:2.25.1-.)
+```
+
+### apt-cache
+- apt-cache is use for fast searching the apt repository.
+- apt-cache will not gone through over internet which make the searching faster.
+- apt-cache is uses cache of apt files which is located in you local at **/var/lib/apt/lists/**.
+```bash
+1 auxfiles
+2 lock
+3 _opt_Tanium_TaniumClient_Tools_Patch_data_repos_repo-28_dists_focal_InRelease
+4 _opt_Tanium_TaniumClient_Tools_Patch_data_repos_repo-28_dists_focal_main_binary-amd64_Packages
+5 _opt_Tanium_TaniumClient_Tools_Patch_data_repos_repo-28_dists_focal_main_cnf_Commands-amd64
+6 _opt_Tanium_TaniumClient_Tools_Patch_data_repos_repo-28_dists_focal_main_dep11_Components-amd64.yml.gz
+7 _opt_Tanium_TaniumClient_Tools_Patch_data_repos_repo-28_dists_focal_main_dep11_icons-48x48.tar.gz
+8 _opt_Tanium_TaniumClient_Tools_Patch_data_repos_repo-28_dists_focal_main_dep11_icons-64x64%402.tar.gz
+9 _opt_Tanium_TaniumClient_Tools_Patch_data_repos_repo-28_dists_focal_main_dep11_icons-64x64.tar.gz
+10 _opt_Tanium_TaniumClient_Tools_Patch_data_repos_repo-28_dists_focal_main_i18n_Translation-en
+11 _opt_Tanium_TaniumClient_Tools_Patch_data_repos_repo-28_dists_focal_multiverse_binary-amd64_Packages
+12 _opt_Tanium_TaniumClient_Tools_Patch_data_repos_repo-28_dists_focal_multiverse_cnf_Commands-amd64
+```
+
+
+# Update your APT Cache.
+- Update means, your existing repo and remote repo should be same.
+- If your APT cache is not updated its metadata will be get fetchig from remote repo then updating to your cache.
+
+#### 🔹 `apt-get update`
+
+Ex. **Local cache before update:**
+```bash
+xyz
+  version: x.y.1
+  dependencies: d1, d2
+  repo: main
+```
+
+**Latest update is available on remote**
+```bash
+xyz
+  version: x.y.2
+  dependencies: d1, b2
+  repo: main
+```
+
+When you run **sudo apt-get update**
+→ APT downloads the latest metadata (package lists) from the repo.
+→ Your local cache entry for xyz will now be:
+
+```bash
+xyz
+  version: x.y.2
+  dependencies: d1, b2
+  repo: main
+```
+
+#### 🔹 `apt-get upgrade`
+
+- What it does: Installs newer versions of already-installed packages if available in the updated cache.
+
+- It looks at your installed packages → compares them with versions in the cache → upgrades them only if dependency changes are not required.
+
+**apt-get update** = updates repo package version info (catalog) in local cache.
+
+**apt-get upgrade** = actually downloads and installs the updated versions of packages you already have.
+
+# Uninstall pkg.
+- use `sudo apt-get remove <pkg-name>` - will remove pkg but left the configurations file of that pkg.
+- use `sudo apt-get purge <pkg-name>` - will remove the whole pkg with its all configurations file.
+
+- The most preferable way to uninstall pkg is
+`sudo apt-get purge <pkg-name>`
+
+- To remove the dangling dependencies which is not used by othet pkg before or after uninstall the pkg.
+`sudo apt-get autoremove`
+
+- Whenever you install a new pkg to your system via apt-get, it will install pkg and unpack it called extract it to your local at **/var/cache/apt/archives/**.
+- Now, you uninstalled pkg and no longer required. but still your pkg copy is saved to your local and which is still consuming your storage.
+- To delete all this copy of pkg named **.deb**.
+```bash
+sudo apt-get clean
+```
+
+- Instead of remove all **.deb** pkg, just want to remove no longer available pkg in repo or old pkg or replaced with other pkg.
+
+```bash
+sudo apt-get autoclean
+```
+
+#### `🔹 sudo apt-get autoclean`
+
+  - This removes old .deb package files from the local package cache (stored in /var/cache/apt/archives/).
+
+  - Specifically, it deletes package versions that can no longer be downloaded from repos (i.e., obsolete packages).
+
+  - It does not remove all cached packages, only the ones that are no longer available in any repo.
+
+  #### 🔹 Example
+
+- Suppose your cache contains:
+```bash
+curl_7.68.0-1ubuntu1.5_amd64.deb   (old, not in repo anymore)
+curl_7.68.0-1ubuntu1.6_amd64.deb   (new, still in repo)
+vim_2:8.1.2269-1ubuntu5_amd64.deb  (still in repo)
+```
+
+#### After run sudo apt-get autoclean
+```bash
+curl_7.68.0-1ubuntu1.5_amd64.deb → removed (obsolete).
+
+curl_7.68.0-1ubuntu1.6_amd64.deb → kept (still valid).
+
+vim_...deb → kept.
+```
+
+| Command                      | What It Does                                                         | What It Removes                                                                  | When to Use                                                                                   |
+| ---------------------------- | -------------------------------------------------------------------- | -------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| **`sudo apt-get clean`**     | Deletes **all cached package files** from `/var/cache/apt/archives/` | Removes every `.deb` file (both old and still available in repos)                | When you want to free up maximum disk space, but don’t mind re-downloading packages if needed |
+| **`sudo apt-get autoclean`** | Deletes **only outdated/obsolete package files**                     | Removes `.deb` files that are no longer available in repos (superseded versions) | Safer cleanup — frees space without deleting current useful cache                             |
