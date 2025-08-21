@@ -8,9 +8,11 @@ This is storage on azure cloud for store your blobs, files, queues and tables.
 
 - Azure storage account types
 
+![alt text](SATypes.png)
+
 # How to access blob on browser
 
-## 1. Enable anonymous access on blob level and from configurations at storage account level.**
+## 1. Enable anonymous access on blob level and from configurations at storage account level.
 
 This is **not recommended for productions** env.
 
@@ -23,6 +25,7 @@ This is **not recommended for productions** env.
 ![alt text](blob-level.png)
 
   **3. Paste blob URL on browser**
+
 ![alt text](anonymous-access.png)
 
 # 2. Use SAS at container or blob Level , keep Container priate.
@@ -73,7 +76,86 @@ This is **not recommended for productions** env.
 
 ![alt text](delete-access-policy.png)
 
+# 3.1.1 Storage Immutable blob access policy
+`1. Legal hold`
+
+- Use while do investigetions for audit purpose. Legal hold will hold your blobs for unknown time.
+- when the investigation is complete then you can release the legal hold by just removing the tags.
+
+`2. Time-based retentions`
+
+- You know how much time will take by investigations like min 1 days.
+- you can set period for least 1 days.
+- after 1 days it will auto remove.
+
+`You can create new blobs & reads only for both the legal hold and Time-based retentions.`
+
+# Storage Tier
+
+`Hot`  
+  - Immediatly access the blob - Costly 0.15$/GB.
+
+`Cool0`
+  - For frequently access blob will store to cool tier 
+  - Object need to stored for a `min 30 days`.
+
+`Cold` 
+  - Object will rerely accessed or modified. you can access a& retrive them.
+  - Object need to stored for `min 90 days`.
+
+`Archive`
+  - Object will no longer required for next 6 month or 1 year / rrely access.
+  - You can't download / access the object immediatly.
+  - It may take too much time based on object size.
+  - You have to go to **Dehydrazaion process** by chang the tier from Archive to Cold/Cool/Hot.
+  - Object stores for `min 180 days`.
 
 
 
+# LifeCycle Management.
+- This feature will helps you to cost optimize by the transition into Hot to Cool to Cold to Archive itself by setting Lifecycle Rule.
 
+- You can set rule for,
+
+  1. All object within Storage Account.
+  2. Specific containers blobs by Limit the blobs with filters. Ex. blob prefix - "mycontainer/blob_name"
+
+
+# Object Replications
+
+- Object will replicated aynchronously between a Source (Primary SA) to Dest (Seconday SA).
+- You create a replication policy to replicate the objects.
+
+- Storage accounts should support.
+
+    - General Purpose V2 or Premium block blob SA Types.
+
+- Some Configurations should be enabled for Object Replicatoins as below
+
+    - Source and Dest SA Should enabled - Blob versionning.
+    - Source SA should enabled - Change feed.
+
+- Bydefault while you configure the object replication rules, the bydefault option for repliacate the blob to dest storage accouunt is choosed is, **Newer blob**.
+
+- So, **your existing blob will not be repliacated to Dest SA.**
+- Only newly created blobs will be replicated.
+
+- To repilcate thos existing blobs to dest SA, you have to copy that blob manually via **AzCopy**.
+- After update it, it will get sync and newer blobs will be replicate to Dest SA.
+
+```bash
+azcopy copy "https://<sourceaccount>.blob.core.windows.net/<container>/*?<SAS-token>" \
+"https://<destaccount>.blob.core.windows.net/<container>?<SAS-token>" \
+--recursive=true
+```
+
+
+# Azure Fileshare
+- It is Storage service for files will be shared between VMs.
+
+- You have uploded files to your azure fileshare and want to mount it on your vm or local.
+- Click on connect - it will generate a .sh scirpt which you have to run on your vm or local.
+
+![alt text](connect-fs.png)
+
+- Copy this script to vm or local.
