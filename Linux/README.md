@@ -746,3 +746,4 @@ vim_...deb → kept.
 | ---------------------------- | -------------------------------------------------------------------- | -------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
 | **`sudo apt-get clean`**     | Deletes **all cached package files** from `/var/cache/apt/archives/` | Removes every `.deb` file (both old and still available in repos)                | When you want to free up maximum disk space, but don’t mind re-downloading packages if needed |
 | **`sudo apt-get autoclean`** | Deletes **only outdated/obsolete package files**                     | Removes `.deb` files that are no longer available in repos (superseded versions) | Safer cleanup — frees space without deleting current useful cache                             |
+
