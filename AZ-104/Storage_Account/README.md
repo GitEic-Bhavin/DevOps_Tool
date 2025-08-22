@@ -159,3 +159,93 @@ azcopy copy "https://<sourceaccount>.blob.core.windows.net/<container>/*?<SAS-to
 ![alt text](connect-fs.png)
 
 - Copy this script to vm or local.
+
+
+
+# Copy/Transfer the data to cloud
+
+## 1. AzCopy
+
+- while you want to copy/transfer data to cloud.
+Common use cases include:
+
+  - Copying data from an on-premises source to an Azure storage account
+  - Copying data from an Azure storage account to an on-premises source
+  - Copying data from one storage account to another storage account
+
+
+- To copy blob to cloud you will required SAS URL
+- The least SAS Permission will be like this - Container & Object, Create and Blob.
+- Without Object - your PUT request for copy blob from local to cloud will now allowed.
+
+```bash
+azcopy copy "file_path" "blob_sas_url"
+```
+
+**OutPut:**
+
+![alt text](copyblob.png)
+
+
+- To create container
+```bash
+azcopy make "file_path" "blob_sas_url"
+```
+**OutPut:**
+
+![alt text](makecontainer.png)
+
+- To download the blob
+```bash
+azcopy copy 'https://<storage-account-name>.<blob or dfs>.core.windows.net/<container-name>/<blob-path>' '<local-file-path>'
+
+# The least SAS Permissios for only for download the blob, Read and list and resource type must be container and object.
+```
+
+**OutPut:**
+
+![alt text](downloadblob.png)
+
+
+## 2. Data Box like AWS SnowBall
+- While want to Transfer data like above 40 GB.
+- No Internat required to connections to data box.
+- Make a request from azure portal search for **Azure Data Box** and fill the required details.
+
+# Private EndPoint
+
+- To make private communications between azure resources by using resource's private ip only.
+
+- Create private ip 
+
+![alt text](create-privateep.png)
+
+- choose target-sub-resource as blob
+
+![alt text](sub-resource.png)
+
+- Choose Vnets and subnet.
+
+![alt text](Choose-vnet.png)
+
+- Now, ssh to vm and try to download .json file from Storage Account.
+```bash
+azcopy copy "https:<storage-account-name>.blob.core.windows.net/<container-name>?<SAS_URL>
+```
+
+**OutPut:**
+
+![alt text](download-json-privateEp.png)
+
+- You can confirm that you are configured correctly the Priavt EndPoint by, if you try to connect to your storage account from the vm inside.
+- It should give the private ip of Private EndPoint from Private EndPoint's NIC.
+```bash
+nslookup <storage-account-name>.blob.core.windows.net
+```
+
+**OutPut**:
+
+![alt text](PrivateIP-EP.png)
+
+
+
