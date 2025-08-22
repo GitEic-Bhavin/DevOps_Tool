@@ -14,7 +14,18 @@
 - Availability zones are physically located close enough together to provide a low-latency network, but far enough apart to provide fault isolation from such things as storms and isolated power outages. 
 
 ## Azure VM Size for diff purposes.
-[VM_Size] (https://azure.microsoft.com/en-us/pricing/details/virtual-machines/series/)
+[VM_Size](https://azure.microsoft.com/en-us/pricing/details/virtual-machines/series/)
+
+| **Series**      | **What it has (CPU vs Memory vs Storage)**    | **Real-World Use Cases**                                                    |
+| --------------- | --------------------------------------------- | --------------------------------------------------------------------------- |
+| **B-series**    | Low CPU & RAM, bursts only when needed        | Dev/test, small websites, low-traffic apps                                  |
+| **D-series**    | Balanced CPU + Memory + Disk                  | Enterprise apps, small/medium databases, web servers                        |
+| **F-series**    | **More CPU**, less memory                     | Batch processing, game servers, API servers, apps needing fast calculations |
+| **E-series**    | **More Memory**, balanced CPU                 | SQL databases, in-memory caching, analytics apps                            |
+| **M-series**    | **Very High Memory** (hundreds of GBs to TBs) | SAP HANA, large DBs, big analytics workloads                                |
+| **Lsv2-series** | High CPU + fast **local SSD storage**         | Big data, NoSQL DBs (Cassandra, MongoDB), heavy disk IOPS apps              |
+| **N-series**    | GPU + normal CPU/Memory                       | AI/ML training, graphics rendering, CAD, video encoding                     |
+| **H-series**    | Very High CPU, HPC tuned                      | Weather modeling, scientific computing, engineering simulations             |
 
 
 # Azure Managed Disk for VM.
