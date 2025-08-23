@@ -194,3 +194,15 @@ Proximity Placement Group
 
 - For the lowest latency, **use proximity placement groups together with accelerated networking**. 
 
+Azure Web App
+---
+
+- Azure Web App is a PaaS (Platform as a Service) offering in Azure App Service.
+- It allows you to host web applications, REST APIs, or mobile app backends without managing servers.
+
+- You cab deploy your code for Node.js, .NET, Java, Python, PHP, etc.
+- Scaling (manual or auto)
+- you can deploy code from github url, uploading zip files.
+- You dont have to manage infra , only have to just push the application code.
+- you can test your code with test env. after testing you can publish your app to prod code via **Deployment Slot**. 
+- You can SWAP to your previous version of app while your prod app is downs.
