@@ -122,3 +122,75 @@ az vm disk attach --resource-group MyRG --vm-name TargetVM --name myDataDisk
 - Can rotate the key.
 - Can disable / delete the key to instantly block the acces to disk.
 
+# Way for Pre-Deployment in VM during Provision of VM ?
+
+There are 2 ways
+  1. Cloud init
+
+```yml
+#cloud-config
+package_update: true
+packages:
+  - nginx
+```
+
+  2. Custome script extensions.
+
+- you have to use SA where your nginx.sh file is stored in container/blob.
+
+# What is VM Image ?
+
+- Taking the snapshot of VM is called VM Image.
+- There are 2 types of image
+
+  1. Specialized Image
+  2. Generalized VM Image
+
+## How to create Image ?
+
+- Chooswe VM , click on Create Image.
+
+![alt text](vmimage.png)
+
+- You can select Specialized or Generalized Image.
+- Give the Versin number for Image.
+
+- After created this image , you can deploy a new VM with Same Configuration and data. You will not requires the reinstall the weapp etc.
+- Choose img during provisions.
+
+![alt text](Spdeploy.png)
+
+- Go to Shared image. here you will found your created image.
+- This image will stored in azure compute gallery.
+
+# Way for Post-deployment in VM during Provision of VM ?
+
+There is 2 way for Post-deployment
+
+1. Custom-Script-Extension 
+
+- You can deploy your applications or required pkg usig custom script extensions.
+- SA required to store the script file
+
+2. Run Commands
+
+- RDP/SSH is not required to run script.
+- SA is not required.
+- Working as same as custom script extensions.
+
+Proximity Placement Group
+---
+
+- To get VMs as close as possible, achieving the lowest possible latency, you should deploy them within a proximity placement group.
+
+- A proximity placement group is a logical grouping used to make sure that Azure compute resources are physically located close to each other. 
+- Proximity placement groups are useful for workloads where low latency is a requirement.
+
+- Low latency between stand-alone VMs.
+- Low Latency between VMs in a single availability set or a virtual machine scale set.
+- Low latency between stand-alone VMs, VMs in multiple Availability Sets, or multiple scale sets.
+
+![alt text](proximity.png)
+
+- For the lowest latency, **use proximity placement groups together with accelerated networking**. 
+
