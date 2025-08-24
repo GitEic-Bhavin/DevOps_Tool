@@ -205,4 +205,110 @@ Azure Web App
 - you can deploy code from github url, uploading zip files.
 - You dont have to manage infra , only have to just push the application code.
 - you can test your code with test env. after testing you can publish your app to prod code via **Deployment Slot**. 
+
+**Deployment Slot**
 - You can SWAP to your previous version of app while your prod app is downs.
+- Bydefault your app is deployed into prod web slots.
+- While you required to test of your new versions of web app, you can't publish/testing on your prod.
+- you will first test on **Staging Slot**, then publish it.
+- after publish your new version, it still to pointing the older/prod web slots older version of web app.
+- To publish new version of web app , you have to perform the **SWAP**.
+
+**SWAP**
+- your new version of web app will go to the prod slot form staging slot
+- your older web app will go t staging slot from prod slot.
+- If your new version of web app failed in prod and want to roll back to older version, you can swap back.
+
+**To create Deployment slot, your web app service plan mst have to upgrade to Std/premium plans.**
+
+Redeploy and Reappy to VM
+---
+
+**Redploy** 
+- While you can't connect to VM. 
+- VM will migrate to diff host.
+- VM will unavailable.
+- Any data in temp. drive will be lost.
+
+**Reapply**
+- Rerun the VM Provisioning to solve the VM Failed state from azure side.
+
+Availability set
+---
+- Logical grouping of VM help to high availability by reduce the chances of going down the VM.
+- Just create Availability set & deploy VM.
+- Once VM is deploy, you can't set to availability sets.
+- you can only set the VM at time of create VM or Availability set is already created.
+
+  Availability set includes
+  ---
+  **1. Fault Domains**
+  - Represents a physical racks in the datacenters.
+  - VM in diff FD.
+  - Default FD is 2 & Max FD is 3.
+  - Protects VM agains hardware failures, Power/Ntwork outage.
+
+  **2. Update Domains**
+  - While performs maintanence, only one UD will rebooted at a time, then the next UD will rebooted.
+  - This will maintain the High availability of applications during Pre-Planned maintenance or upgradations.
+  - VM in diff UD will not be rebooted together.
+  - Ex. if 1 UD has 4 and another 2 UD has vm. so only 4 VM will be rebooted.
+  - Defult UD is 5 and Max UD is 20
+
+- Each availability set can have up to 3 fault domains and 20 update domains.
+
+    ![alt text](FDUD.png)
+
+Ex. You have 14 VM. FD is 3 and UD is 5. How the All VM will be spreads across FD and UD ?
+What will be the Min and Max VM for FD and UD ?
+
+**Fault Domains**
+- 14 divided by 3 equals 4 with a remainder of 2. 
+
+- This means two FDs will each contain 5 VMs (4 + 1), and one FD will contain 4 VMs.
+
+- The distribution will be 5, 5, and 4 VMs per FD.
+
+During Maintennance Min FD VM will affected will 4 and Max VM for FD will 5
+
+**Update Domains**
+- 14 divided by 5 equals 2 with a remainder of 4.
+
+- This means four UDs will each contain 3 VMs (2 + 1), and one UD will contain 2 VMs.
+
+- The distribution will be 3, 3, 3, 3, and 2 VMs per UD.
+
+Min UD VM will be affected is 2 and Max VM for UD is 3.
+
+Azure Container Registry
+---
+- We can store our docker image into ACR instead of docker hub.
+- This are the private registry that can be used for storing your docker-based images.
+
+Azure Container Instance
+---
+
+- It is a docker container on azure and managed by azure.
+- you can push your docker image to your ACR.
+- Azure container will be pull img from ACR and publish your applications on particular port.
+
+- To push your img to ACR , follow the below steps.
+
+```bash
+sudo docker login < login_server_name > -u < username > -p < password >
+```
+
+- To give tag to your image as your ACR name
+```bash
+sudo docker tag < img_name > < ACR_login_server_name/img_name >
+```
+
+- To push img to your ACR
+```bash
+sudo docker push < ACR_login_server_name/img_name >
+```
+
+- Deploy your app to azure container
+```bash
+az container create --resource-group myResourceGroup --name mycontainer --image ACR_login_server_name/img_name --dns-name-label aci-demo --ports 80 --os-type linux --memory 1.5 --cpu 1
+```
