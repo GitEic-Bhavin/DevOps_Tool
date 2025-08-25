@@ -42,3 +42,71 @@ Attach NSG at Subnet Level
 - To allow traffic for HTTP request you have to add HTTP Rule to VM NSG.
 
 ![alt text](HTTPVM.png)
+
+Application Security Group
+---
+
+- You have multiple Vm and have a same Inbound and Outbound rule in NSG or for specific port request you want to inbound in all VM, you can use ASG.
+
+- create ASG.
+
+![alt text](Asg.png)
+
+- Attache this ASG to VM1 and VM2.
+
+![alt text](attachAsg.png)
+
+- Instead of give the VMs Private IP as dest, use ASG for Dest.
+
+![alt text](AttachASG.png)
+
+**The rule means:**
+
+- Traffic from your IP → allowed to port 80 of any NIC that belongs to ASG1.
+
+- Since VM1’s NIC is in ASG1 → rule applies to VM1.
+
+- So yes, you can access Nginx on VM1 via port 80
+
+![alt text](nginxAsg.png)
+
+- It looks up which NICs are in ASG1 (VM1’s NIC in your case).
+
+- Then it expands the rule to mean: **“Allow traffic from your IP → VM1’s private IP (because NIC is in ASG1) on port 80.”**
+
+Azure Bastion Hosts
+---
+
+It is provides secure communications to VMs without the need of Public IP Address.
+
+You can establish RDP and SSH to VMs from Azure Portal.
+
+You will required the Public IP address for **Azure Bastion Hosts** not for VMs.
+
+![alt text](AzureBastions.png)
+
+**Different SKUs for Azure Bastions service**
+
+![alt text](SKUs.png)
+
+- you need a empty subnet for this bastion service.
+- in this empty subnet, the bastion will deploy their VMs which will use to connect your VMs in your network privatly via Private IP.
+
+- so you will establish a secure connenction from azure portal on to your bastion's public ip and azure bastions will manage connections internally or privately to your VMs.
+
+![alt text](bastionsarc.png)
+
+- The minimam size of AzureBastionEmptySubnet should /24.
+- We have to DisAssociate the public ip of all VM.
+- after DisAssociate the Public IP of VM we will not be able to reach that VM via Internet.
+
+- Go to VM1 > Connect > Bastions > Give VMs Credentials > click on Connect
+
+![alt text](connect.png)
+
+- you can connect all vm which are part of that Vnet where the bastions is deployed via bastions service 
+- you can't connect to another Vnets VM via bastions without Vnet Peering.
+- you have to ensure you had enable Vnet Peering to establish the connection from Bastion Subnet Vnet to Another vnet VM.
+
+**NOTE** - `To make SSH connection via bastions using AZ CLI, you must have to Std or Premium SKUs. Basic SKU supports only from Azure portal.`
+
