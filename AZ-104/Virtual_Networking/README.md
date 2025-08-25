@@ -110,3 +110,27 @@ You will required the Public IP address for **Azure Bastion Hosts** not for VMs.
 
 **NOTE** - `To make SSH connection via bastions using AZ CLI, you must have to Std or Premium SKUs. Basic SKU supports only from Azure portal.`
 
+User defined routes
+---
+
+You want to transfer the pkg1 from sub1 VM1 to sub2 VM2.
+How they are trasfering the pkg between subents and its VMs ?
+Bydefault there is **Systems Routes** in place which ensure the traffics is routed correctly across the subnets in the Vnets.
+
+But What if your company have a VM hosting a virtual appliance - FireWall and all traffics/pkgs have to be routed through this Virtual Appliance ?
+
+You can define your own routes by **user-defined routes** which will ensure all traffics will routed through this Virtual Appliance.
+
+- Created 2 VM in diff subnet.
+- To route the traffic through Appliance, you have to create route table.
+
+![alt text](rt.png)
+
+- Create a new route and mentions the destinations as Dest VMs Subnet CIDR.
+- Choose next hope type is Virtual Appliance and its Private IP.
+
+![alt text](newroutes.png)
+
+- Associate this RT to VM1 Subnet due to VM1 want to Route Traffic to VM2.
+- Try to ssh from Bastion Host VM to Dest VM VM2.
+- It will not connected.
