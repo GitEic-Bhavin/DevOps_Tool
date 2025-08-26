@@ -133,4 +133,24 @@ You can define your own routes by **user-defined routes** which will ensure all 
 
 - Associate this RT to VM1 Subnet due to VM1 want to Route Traffic to VM2.
 - Try to ssh from Bastion Host VM to Dest VM VM2.
-- It will not connected.
+- It will not connected bcz, The central vm (Virtual Appliance) need to have capability of taking the pkg and forward to next hop dest is VM2.
+- For that perform the few stpes
+
+  - Enable IP Forwading for Central VM by Settings > IP Configurations.
+
+![alt text](IpForwarding.png)
+
+  - SSH to Central VM via Bastions and Edit /etc/sysctl.conf enalbe IP Forwarding for IP Version for OS Level.
+
+![alt text](IpFrwOsLevel.png)
+
+  - Restart the Central VM to reload the system conf changes.
+
+Azure Network Watcher
+---
+
+- Azure Network Watcher is a service offering tools to monitor, diagnose, and visualize Azure Infrastructure-as-a-Service (IaaS) networks, helping to troubleshoot connectivity and performance issues. 
+
+- Network Watcher has various feature for Monitoring, Traffic analysis and connectivity troubleshooting as below.
+
+![alt text](NetworkWatcher.png)
