@@ -138,3 +138,173 @@ There are three main activity in Governance
 **Service Value Chain**
 
 A set of Interconnected activities that an org performes to deliver a valuable product or service to its consumers.
+
+It have activities like Engage, Plan, Improve, Design and transistions, Obtain/Build, Deliver & Support, Product & Services.
+
+**Plan** - Refers to the activites involving like creating plans, protfolios, architectures, policies etc provided by the org.
+
+You will be enabled to get the clarity in terms of to get detail about the services and what are those results which are required to be established.
+
+📖 Definition: Ensure a shared understanding of vision, current status, and improvement direction for all activities.
+
+Ex. An IT company plans how to launch a new food delivery mobile app — setting budgets, timelines, and objectives.
+
+**Engage** - Engaging with stackholders reequires clear focus on understancing the requirements as needed by the consumers.
+
+📖 Definition: Build a good understanding of stakeholder needs, maintain transparency, and manage relationships.
+
+Ex. Talking to restaurant owners, delivery partners, and customers to understand what features they need in the app.
+
+**Desing and Transitions** - Focuses on creating and releasing new and changed services.
+
+📖 Definition: Design new or changed services and ensure they meet quality, cost, and time requirements before going live.
+
+Ex. Designing the food delivery app, testing it, and preparing for release on the App Store/Play Store.
+
+**Obtain/Build**
+
+📖 Definition: Ensure service components (apps, infrastructure, tools, resources) are available when and where needed.
+Ex. Developers write code, build the mobile app, set up cloud servers, and integrate payment gateways.
+
+**Deliver & Support**
+
+📖 Definition: Deliver services and provide support according to agreed specifications and expectations.
+Ex. Customers download the app, place orders, and get 24/7 support if payments fail or delivery is late.
+
+**Improve**
+
+📖 Definition: Ensure continual improvement of products, services, and practices across all activities.
+Ex. After launch, the company collects user feedback (slow checkout, missing tracking feature) and continuously improves the app.
+
+## Bringing it all together (Flow Example):
+
+  - **Plan** → Decide to build a food delivery app.
+
+  - **Engage** → Ask restaurants and customers what they need.
+
+  - **Design & Transition** → Design, test, and prepare app for launch.
+
+  - **Obtain/Build** → Developers code the app, servers are set up.
+
+  - **Deliver & Support** → Customers use the app, and IT support helps.
+
+  - **Improve** → Collect feedback and keep upgrading.
+
+**Practices**
+
+A practice is a set of organizational resources designed for performing work or accomplishing an objective.
+
+👉 In short: Practices are the capabilities, processes, people, and tools an organization uses to get specific outcomes.
+
+The practices are divided into 3 categories:
+
+1. General Management Practice (14 Practices)
+
+You want examples to help you understand the three types of ITIL 4 practices. Think of a company that sells software online. Here’s how the three practice categories would work in that company.
+
+These are like the foundation of the company itself. They're not just about IT; they're about how the entire business is run.
+
+
+    Example: Project Management 👷
+    The company wants to launch a new version of its software. The project management practice is used to plan all the steps: setting deadlines, assigning tasks (like coding the new features and writing the marketing materials), and making sure the project stays on budget. This practice is used by many parts of the business, not just the IT department.
+
+    Example: Risk Management 🚨
+    Before launching the new software, the company uses the risk management practice to think about what could go wrong. They might identify risks like a competitor releasing a similar product first, or a bug in the new version causing a major outage. They then plan how to handle these risks.
+
+14 Practices are:
+
+    Architecture Management
+
+    Continual Improvement
+
+    Information Security Management
+
+    Knowledge Management
+
+    Measurement & Reporting
+
+    Organizational Change Management
+
+    Portfolio Management
+
+    Project Management
+
+    Relationship Management
+
+    Risk Management
+
+    Service Financial Management
+
+    Strategy Management
+
+    Supplier Management
+
+    Workforce & Talent Management
+
+2. Service Management Practice
+
+These practices are all about how the company's IT department delivers and supports the software as a service to its customers. They are the core of IT service management.
+
+    Example: Incident Management 🆘
+    A customer calls the support line because the software is crashing every time they try to save a file. The incident management practice kicks in. A support agent (from the service desk) logs the incident, tries to find a quick fix, and if they can't, they escalate it to a technical team to get the service working again as fast as possible. The goal is to restore normal service operation quickly.
+
+    Example: Service Level Management (SLM) 🤝
+    The company has an agreement with its enterprise customers (Service Level Agreement or SLA) that their support requests will be answered within one hour. The SLM practice is used to monitor this performance, ensuring the support team consistently meets or exceeds this target. It's about setting and meeting expectations for service quality.
+
+    Example: Change Enablement 🔄
+    When the company wants to release a new feature for the software, they don't just put it on the website. The change enablement practice ensures the update is planned and tested to prevent it from causing new problems. They evaluate the risk of the change and get approval before it goes live to make sure it won't break anything for existing users.
+
+  Availability Management
+
+  Business Analysis
+
+  Capacity & Performance Management
+
+  Change Enablement
+
+  Incident Management
+
+  IT Asset Management
+
+  Monitoring & Event Management
+
+  Problem Management
+
+  Release Management
+
+  Service Catalog Management
+
+  Service Configuration Management
+
+  Service Continuity Management
+
+  Service Design
+
+  Service Desk
+
+  Service Level Management
+
+  Service Request Management
+
+  Service Validation & Testing
+
+3. Technical Management Practice
+
+  - Deployment Management
+
+  - Infrastructure & Platform Management
+
+  - Software Development & Management
+
+
+These are the most hands-on, technical practices that deal with the actual technology and infrastructure. They're what makes the services run.
+
+    Example: Infrastructure and Platform Management 💻
+    The company's software is hosted on cloud servers. The infrastructure and platform management practice is used to manage these servers. This includes things like making sure there's enough server space to handle a large number of users and keeping the operating systems updated to prevent security vulnerabilities.
+
+    Example: Deployment Management 🚀
+    After a new software feature has been approved through change enablement, the deployment management practice is used to move the new code from the development environment to the live, production environment that customers use. This is the act of physically putting the new feature "out there" for everyone to use, and it's done in a controlled way to minimize disruption.
+
+    Example: Software Development and Management 🧑‍💻
+    This practice covers everything from writing the code for the new software features to testing them to make sure they work correctly and don't introduce bugs. It's the technical work of actually building and maintaining the software itself.
+
