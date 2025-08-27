@@ -298,11 +298,23 @@ Azure Private DNS Zones
 
 - You don't requires to deploy your owns infrastructure to host a domain name mng. system
 
-- You can create a link between Azure Private DNS Zone and the Vnets.
+- You can create a link between Azure Private DNS Zone and the Vnets. 
+
+    - Go to Azure DNS Zone > DNS Management > Virtual Networks Links > Add
+    ![alt text](adzlinkvnet.png)
+
+    - Give Link name , Choose Sub and Vnet, Enable Auto-Reg
+    ![alt text](LinkAdzs.png)
 
 - After enabled DNS Zone Link , you can enabled **Auto-Registrations** for DNS Link.
 
 - While you create new VM as part of this Vnet where DNS Zone is linked, that new VM will be auto-registered in the domains.
+
+    - Go to Azure DNS Zone > DNS Management > RecordSets. Here, for all Existing and newly created VMs the DNS Records is automatically created.
+
+    - VM IP will be added to DNS Records as below. 
+
+    ![alt text](DnsRecordsForVm.png)
 
 - So, Vnet becomes a **Registrations Vnets**
 
