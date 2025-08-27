@@ -329,6 +329,11 @@ cat: invalid option -- 'k'
 Try 'cat --help' for more information.
 ```
 
+# Redirect both Std Output & Std Error to error.txt
+```bash
+cd /root/ > error.file 2>&1
+```
+
 # Std input , Std output using tee command
 ```bash
 date | cut --delimiter=" " --field=1 | tee fullday.txt
@@ -346,6 +351,132 @@ Tue 19 Aug 2025 12:45:24 AM IST
 
 - here, tee command will print the output of date to fullday.txt and this output of date will pass to next command for cut and print 1st field like Tue.
 
+## Cut Options
+- -d - Use delimiter as field separator
+- -f N - Display the Nth field
+```bash
+cut -d : -f1,5 file.txt
+# -f for field/column for 1 and 5.
+```
+
+AWK
+---
+
+Prints every line of a file.
+```bash
+awk '{print}' file.txt
+```
+
+Print specific column
+```bash
+awk '{print $1,$2}' file.txt
+```
+
+Filed Separator with -F "Define_Filed"
+```bash
+awk -F " " '{print $2}' awk.txt
+# OutPut
+is
+is
+is
+is
+```
+
+Print everyting after "This"
+```bash
+awk -F"This " '{print $2}' awk.txt
+# OutPut
+is first line
+is second line
+
+# It will print all after "This" as $2
+# If "This " is repeated then it will as $3
+```
+
+**Print with conditions**
+- Print if salery is greater then 25000
+
+```bash
+# Use NF for print only Last colume
+awk -F , '$6 > 25000 {print}' awk1.txt 
+# OR
+awk -F , '$NF>25000 {print}' awk1.txt
+```
+
+**For multi-delimeter**
+
+`Use [] and define all delimeter inside []`
+
+```bash
+cat multi-delimiter.txt 
+#OutPut
+This is, example of: Multiple-delimeter
+```
+Here, filed 1 is before seperator : and , is `This is`
+filed 2 is ` example of`
+filed 3 is ` Multiple-delimeter`
+
+```bash
+awk -F[,:] '{print $3}' multi-delimiter.txt 
+#OutPut 
+Multiple-delimeter
+```
+
+```bash
+awk -F[,:] '{print $1}' multi-delimiter.txt 
+#OutPut
+This is 
+```
+
+**For specific line only**
+```bash
+sudo systemctl status nginx.service | awk -F ":" ' NR==3 {print $2}'
+#OutPut 
+active (running) since Wed 2025-08-27 10
+
+# Use NR==3 for Line number is only 3
+sudo systemctl status nginx.service | awk -F " " ' NR==3 {print $2}'
+#OutPut
+active
+```
+
+**Print long list file by awk**
+```bash
+ls -lt | awk -F " " '{print $9}'
+
+#OutPut
+README.md
+multi-delimiter.txt
+awk1.txt
+awk.txt
+error.file
+kernal.png
+
+#OR use NF to print only last column
+ls -lt | awk -F " " '{print $NF}'
+68
+README.md
+multi-delimiter.txt
+awk1.txt
+awk.txt
+error.file
+kernal.png
+```
+
+**Avoid 68 from above awk**
+```bash
+# Use NR>1 - it mean print all lines except line number 1
+ls -lt | awk 'NR>1 {print $NF}'
+
+#OutPut
+README.md
+multi-delimiter.txt
+awk1.txt
+awk.txt
+error.file
+kernal.png
+```
+
 ## use xargs Command in pipe.
 - xargs allow you to convert piped data into command line arguments for commands that only accept command line arguments.
 - Some commands don’t accept piped input (|), they only work with arguments passed directly.
@@ -353,6 +484,20 @@ Tue 19 Aug 2025 12:45:24 AM IST
 ```bash
 rm file1 file2 file3
 # works because rm accepts file names as arguments.
+```
+
+**Print with time range**
+```bash
+less /var/log/nginx/error.log.1 | awk '$2>="17:23:00" && $2<="17:24:00"'
+```
+
+**Print the modified files for Oct only**
+```bash
+ls -ltr ~/Downloads/ | awk '$6=="Oct" {print}'
+
+#OutPut
+-rw-rw-r--   1 einfochips einfochips   27038508 Oct  2  2024 terraform_1.9.6_linux_amd64.zip
+-rw-rw-r--   1 einfochips einfochips    1801992 Oct  4  2024 Shiva (2).jpg
 ```
 
 - But if you try:
