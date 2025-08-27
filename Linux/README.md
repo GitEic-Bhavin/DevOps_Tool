@@ -506,6 +506,122 @@ echo "file1 file2 file3" | rm
 # it fails, because rm does not read from stdin (the pipe).
 ```
 
+Sed - Text Manupulating
+---
+
+```bash
+sed 's/pattern/replacement/flags' file
+
+# s - Substitute
+# pattern - Existing word find in file
+# replacement - Put new word
+$ Flags - g for match all world in all lines
+        - 1 Replace 1st occurrence per line
+        - 2 Replace 2nd occurrence per line
+```
+
+
+
+**To modify the word in file**
+```bash
+cat sed.txt
+#OutPut
+ID Name Salary Country
+1 Pol 25000 India
+2 Bont 45000 Belgium
+3 Loki 55000 Germany
+4 Hina 35000 India
+```
+**Modify Pol with Paul**
+```bash
+sed 's/Pol/Paul/1' sed.txt 
+
+#OutPut
+ID Name Salary Country
+1 Paul 25000 India
+2 Bont 45000 Belgium
+3 Loki 55000 Germany
+4 Hina 35000 India
+```
+**Replace all occurence in each line use g**
+```bash
+sed 's/India/Indain/g' sed.txt
+
+#OutPut
+ID Name Salary Country
+1 Pol 25000 Indian
+2 Bont 45000 Belgium
+3 Loki 55000 Germany
+4 Hina 35000 Indian
+```
+
+**Delete a line which match patterns use d**
+```bash
+sed '/Loki/d' sed.txt
+
+#OutPut
+ID Name Salary Country
+1 Pol 25000 India
+2 Bont 45000 Belgium
+4 Hina 35000 India
+```
+
+**Insert a new line  before the line of match pattern**
+
+```bash
+sed '3i\Two new line' sed.txt 
+
+#OutPut
+ID Name Salary Country
+1 Pol 25000 India
+Two new line
+2 Bont 45000 Belgium
+3 Loki 55000 Germany
+4 Hina 35000 India
+```
+
+**Append a new line after match patterns**
+```bash
+sed '5a Appedn new line' sed.txt 
+
+# 5 - line number
+# a - Append new lines after match a patterns
+#OutPut
+ID Name Salary Country
+1 Pol 25000 India
+2 Bont 45000 Belgium
+3 Loki 55000 Germany
+4 Hina 35000 India
+Appedn new line
+
+# OR
+
+sed '5a\Appedn new line\' sed.txt 
+
+#OutPut
+ID Name Salary Country
+1 Pol 25000 India
+2 Bont 45000 Belgium
+3 Loki 55000 Germany
+4 Hina 35000 India
+Appedn new line
+```
+
+
+
+**Change a line by c**
+```bash
+sed '5c\Appedn new line\' sed.txt 
+
+#OutPut
+ID Name Salary Country
+1 Pol 25000 India
+2 Bont 45000 Belgium
+3 Loki 55000 Germany
+Appedn new line
+```
+**NOTE** - sed will not make changes into file during perform sed commands.
+
 ## xargs takes piped input and converts it into arguments for the command.
 ```bash
 echo "file1 file2 file3" | xargs rm
