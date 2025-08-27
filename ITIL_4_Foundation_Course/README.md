@@ -357,3 +357,210 @@ Relationship with other ITIL processes
 
 ![alt text](relationITIL.png)
 
+## Techniques used to Manage the problems
+
+1. Root cause analysis
+2. Trend analysis
+3. Fishbone diagrams
+4. Brainstrom sessions
+
+## Best practices and tips
+
+1. Forest problem reporting - first report the probelm within your org.
+2. Encourage everyone - to reports the isseus, no metters how long or small to catch problem early
+3. Establish clear processes - and proceduers so know there is role and steps to follow.
+4. Collaborate across IT service - Invest in training and develop strong problem management skill across your team.
+
+Incidence Management
+---
+
+Every incidence is a event but every evnet couldn't an incidence.
+
+If your laptop screen is not working and black during your daily work. this is a first time you face issue.
+This may effect your productivity of your work , outage and disrupts to your work. this is first time so called an Incidence.
+
+What is event or issue ?
+After solved this issue and you are facing frequently is called and event.
+which means that issue still not resolved permanantly.
+
+Incidence management is the process used by development and it teams to response to these disruptions and restore services to their operational state.
+The goal is to reduce the downtime and minimize the impact on productivity.
+
+ITIL is cookbook for best practices. it provide the best practices 
+
+Types of Incidence management teams
+---
+
+1. IT service management
+
+- They are the general practitionars of IT ensuring all IT services align with business needs.
+
+2. Site reliability Engaging SRE
+
+- Focusing on building robust scalable systems to prevent the incidence.
+
+3. DevOps - They are the bridge between the development and operations aiming to make software delivery faster and more reliable.
+
+Incidence management process
+---
+
+1. Incidence loggings
+- Grab your phone and log this incidence to your org IT Portal.
+- you type "laptop screen is black and presentaion within an hour, type your name and time when it happens.
+- By this IT Team will understand how the Priority and criticality and emg impact.
+
+2. Categorization
+- your incidence lands in the IT Service desk queue. The techinician reads your reports and categories it under hardware and sub-category display issues.
+
+3. Prioritizations
+- The techinician has decide how urgent your issue is. 
+
+4. Diagnosis and Escalations
+- IT team remotly accesses your laptop and tries a few quick fixes, restarting and checking the didplay settings.
+- If it is not fixed remotely. so they log all required findings and escalate it to hardware.
+
+5. Investigate and Diagnosis
+- After some tests, he find that this is not hardware failure. It's a driver issue. Your graphics driver crashes after a recent updates.
+
+6. Resolutions and recovery
+- After rolling back a driver to stable version and testing it, your screen is back.
+- techinician will carefully updates the newest stable driver.
+- This durations is called the recovery time.
+
+7. Closure
+- IT Teams will confirm with you that everything is workig perfectly ?
+- Then, close this incidence ticket in their system and marking as resolved.
+
+## Best Practices
+1. Log Everything
+2. Train your team
+3. Set alerts
+4. Learn from incidence
+
+Incidence Management Tools
+---
+
+1. Incident Tracker
+- Document every incidence for trends analysis.
+
+2. CHATROOMS
+- For real time chat communications during Diagnosis.
+
+3. Video Chat
+- complements text chat for discussing findings.
+
+4. Real-Time monitoring & Alering systems
+- Integrates with monitoring and manages on call rotations.
+
+5. Documentations Tools
+- Capture incidence and postmotems
+
+6. Status page
+- Communicate status to stackholders and customers.
+
+What is Customer Relationship Management ?
+---
+
+- It's all about managing how Businesses interact with their customers.
+
+Why CRM is important ?
+---
+
+To better customer relationships.
+When a business knows who you are and what you like and what you have bought before, it feels persional.
+
+Boosts Sales and Revanue - By tracking customer behaviors, businesses can spot trends like which products sell best or which customers might be ready to buy agins.
+
+Improve Customer service
+
+Streamlines Marketing Efforts - Instead of blasting generic ads, companies can send persionalized offers based on your preferences or past purchases.
+
+CRM streamlines marketing efforts by giving insights that let IT providers communicate the right service to the right customer at the right time.
+
+Centralizes the informations - CRM keeps everythings in one place.
+
+Data driven decisions -
+
+Main Components of CRM
+---
+
+1. Sales Automations
+
+- Helps the sales team manage leads, track customer interactions, schedule follow-up and close deals faster.
+
+2. Marketing Automations
+
+- Helps businesses automate marketing campagns.
+- It can send persionalized emails, manage social media posts and track how customer respond.
+
+3. Customer Service & supports
+
+- When customers have issues or questions, this part helps manage tickets, track problem resolutions and provide timely supports.
+
+4. Contact Management
+
+- This is the heart of CRM - It stores detailed customer profile including names,phone numbers, emails, purchase history, preferences and more.
+
+5. Analytics and Reporting
+
+- CRM systems collect lot of data.
+- This part analyzes it to create reports and dashboards showing sales performance, customer behavior, campaign success and other valuable insights.
+
+6. Workflow Automations
+
+- This lets businesses set up rules to automate repetitive tasks - like assigning new leads to sales reps or sending thank-you emails after a purchase.
+
+7. Integration capabilities
+
+- CRMs can connect with other tools buisnesses use, like emails, calendars, accounting softwares and social media platforms.
+
+How CRM Works ?
+---
+
+Collecting customer data: First, businesses gather info about their customers.
+Organizing and analyzing: This data is then organized so that it's easy to access and analyze.
+Ex. Based on customers is seraching for most of which products and give relavent products while browsing your apps.
+
+Engaging with customers: based on this info, companies can send personalized offers, respond quickly to questions, or follow up after a purchase.
+
+Improving Relationships: The goal is to build a stronger, ongoing relationship by understanding customer needs and solving their problems.
+
+Feedback and Optimizations: Org gather feedback to see what's working and what's not, then improve their process.
+
+What does CRM Manager do ?
+---
+
+1. Manage the CRM system
+2. Analyze Customer Data
+- Look at trends and patterns to help marketing and sales team target the right customers with the right msg.
+
+3. Co-ordinate Teams
+- Work closely with the sales, marketing and customer support teams to make sure everyone uses CRMs data effectively
+
+4. Improve Customer experience
+- Automating follow-ups
+
+5. Train Staff
+- Teaches the team to how to use the CRM system properly.
+
+Real World examples
+
+1. Amazon
+
+Have you ever noticed that how Amazon recommends products you might like ?
+That is CRM in the Actions.
+They analyze your past purchases and browsing habits to personalize your shopping exp.
+
+2. StarBucks
+
+They use CRM to send you special offers on your birthday or rewards for your loyalty, making you feel valued and encouraging you to keep coming back.
+
+3. Netflix
+
+It tracks what did you like to watch, based on this data it will suggest shows you might enjoy.
+
+CRM Tools
+
+1. Zoho Free CRM
+2. HubSpot
+3. Freshworks
