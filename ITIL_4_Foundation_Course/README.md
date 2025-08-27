@@ -308,3 +308,52 @@ These are the most hands-on, technical practices that deal with the actual techn
     Example: Software Development and Management 🧑‍💻
     This practice covers everything from writing the code for the new software features to testing them to make sure they work correctly and don't introduce bugs. It's the technical work of actually building and maintaining the software itself.
 
+**Continual Improvement**
+- It ensures whether IT services are Continuously aligned to stackholders
+- It offeresa structured approach to the org in order to bring improvements Ex. Plan, Do, Check, Act.
+
+What is Problem Management in ITIL ?
+---
+
+- It is a process that helps you to identify the root cause of the Incidence and find the permanant sol to prevent from re-occur.
+
+- It will also analyzing and resolving pro-actively. so your IT services will move smoothly.
+
+Importance of Problem Management ?
+---
+
+- Prevent from re-occuring the incidents, minimize the downtime and ensure reliability services which will helps you to provides stable and consistent IT services to your customer.
+
+Ex. A company says the employees frequently face system crashes due to software conflicts. each time this happens, productivity takes a hit causing delay and frustrations
+
+With Problem management the IT Team investigates the root causes of these crashes and discovers that the recent software update is incompatible with the other apps.
+
+So, they Rollback an update and implement a compatible versions. This permanant fix is not only stop the crashes but also improve the overall system stability and reduced downtime.
+
+How does problem management works ?
+---
+
+**Identifications** - Spotting potential problems throgh reported incidence by monitoring your systems.
+Ex. IT team notices frequently system crashes reported by employees.
+
+**Logging** - Once the issue is identified, the IT Team logs all the relevant details into their management system.
+
+**Categorization and Prioritizations** - The problem is categorized based on severity and impact. If system downtime impact the user can't reachable to access the apps which are given high priority. so, IT team investigate through trend analysis and cause and effect diagrams.
+
+**Workaround and Escalations** - To minimize disruptions, a temporary workaround is implemented.
+
+This is involed Rolling back the software update on critical systems while a more permanent sol is developed.
+
+If issue still not permanently solved, this issue will be escalated to specialzed technical terms.
+
+**Probelm resolutions** - After develop compatible version of software, They will test it and check for whether the issue is re-occured frequently or not. then they will deploy this updated software to org.
+
+**Closure** - All relevant doc is updated to reflact the sol and steps takens.
+
+**Review** - helps to review whole doc and process to implement the permanent fix to identify any lessons learned or areas for improvement.
+
+Relationship with other ITIL processes
+---
+
+![alt text](relationITIL.png)
+
