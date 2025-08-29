@@ -80,3 +80,148 @@ Key Concept of Copy Activity
   - Max data parallel is 32
 
 
+Expressions and Variables
+---
+
+- Make pipeline more flexible and dynamic.
+- Instead of hard coding value like Accesskey, filepath, we can use expressions to detemint them at runtime.
+
+**Variables** - Are properties that can be set and modified during a pipeline runs.
+
+- Expressions can be specified for a variables.
+
+- Variables can defined at pipeline level to access all activities in the pipelines.
+
+## - Example: Add function for give current utc time as value of variable VarTest1
+
+- Choose any of activity like set variable and move your mouse to value in settings
+- Here, you will see **Add dynamic content**
+
+![alt text](adddynamic.png)
+
+- Go to Functions > Data functions > utcNow - Will give current time
+
+![alt text](utcNow.png)
+
+- OutPut:
+ ```bash
+{
+	"name": "VarTest1",
+	"value": "2025-08-29T17:24:15.1423461Z"
+}
+```
+
+**Parameters**
+
+![alt text](parameter.png)
+
+## Runtime Parameter - Ask you to enter value during runtime.
+
+- Create parameter by click anywhere in activity 
+- Go to Parameter and create. Leave for its value.
+
+![alt text](createparam.png)
+
+- Choose activity and go to Parameter.
+- Here you will see your created parameter.
+
+![alt text](param.png)
+
+- click on it.
+
+- This will ask to enter the params value while you run it.
+
+![alt text](askparam.png)
+
+- OutPut
+```bash
+{
+	"name": "VarTest1",
+	"value": "Parameter 1"
+}
+```
+
+## Global Parameter - Use and sharable to all pipeline.
+
+- Go to Manage > Global parameters
+
+![alt text](gotomanage.png)
+
+- Set global parameters 
+![alt text](setgp.png)
+
+- Go to variables > set function concate and pass global and runtime parameter.
+
+![alt text](passglrt.png)
+
+**`OutPut`**
+
+![alt text](outputglrt.png)
+
+Importing Data using secrete via Azure Key Vault
+---
+
+- Create key vault
+- Create secrets
+
+![alt text](createsecret.png)
+
+- Create Key vault access policy for retrive secrets by read and list permissions.
+
+![alt text](acessr-l.png)
+
+- Choose principle as your ADF Name.
+
+![alt text](accessp-adf.png)
+
+- we give the access of key vault to ou ADF via access policy permissions of read and list
+
+- To connect our ADF to Key vault we need to create link service within ADF
+
+- Go to manage > create > Linked service 
+
+![alt text](newconnection-keyvault.png)
+
+- Now Edit new-connection for storage account we already created.
+- Edit new-connection for SA for switch from storage account to key vault for access the storage key from secrets from key vault.
+
+![alt text](switchtokv.png)
+
+Excercise
+---
+
+`Create Pipeline for copy Verde JSON file from raw to cleansed container and transform to CSV formate.`
+
+`Use ForEach and the metadata acitivity`
+
+`Use Parameter and Azure key vault to provide access key of SA using secrets`
+
+- Create new pipeline and drag & drop activity named **Get Metadata**
+
+- Rename it to Get File List
+
+- Go to Settings > New > Choose Gen2 > JSON
+
+- Browse the path for Varde Json files from raw container as source.
+
+![alt text](rawbrowse.png)
+
+## Use ForEach Activity drag and drop it
+
+  - Add Activity **GetFiles ChileItems** in settings of ForEach Activity
+
+  ![alt text](Getfiles.png)
+
+  - Give Source and Dest/Sink browse path.
+
+  - Go to Parameter and Create Source parameter name**filename** and type **string** value leave.
+
+  - Go to Connections and look into File path for **Add dynamic content**
+
+  ![alt text](adddynamictofileforsource.png)
+
+  - Choose parameter **filename**
+  
+
+
+
