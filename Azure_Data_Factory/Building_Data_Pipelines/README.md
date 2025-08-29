@@ -143,3 +143,44 @@ Create pipeline to copy zip fril from landing and unzip to raw container.
 - Go to Gen2 > container > raw container
 
 ![alt text](rawunzip.png)
+
+Importing data using copy activity
+---
+
+- Create cleansed container
+- Create salesdata folder in this cleansed container
+
+- This pipeline will copy data from  raw container to cleansed container's salesdata folder
+
+- Choose **Recursively** will ensure copy all folders.
+
+![alt text](recursively.png)
+
+- Give source path as raw > Arancione/.
+
+![alt text](broseraw.png)
+
+- Keep default all configuration and make sure Check the box for **First row as header** 
+
+![alt text](firstrow.png)
+
+- Go to Destinations > Browse for Cleansed > salesdata and leave other settings as it is.
+
+![alt text](destcleansed.png)
+
+- Go to Destinations Conf. and make sure Check the box for **Add header to file** which will formate the each files
+
+![alt text](destconf.png)
+
+- Go to settings and give pipeline name
+
+![alt text](cleansedsettings.png)
+
+- Review and finish and monitor details for same.
+
+![alt text](cleanseddetail.png)
+
+- Look into cleansed container
+
+![alt text](datacleansed.png)
+
