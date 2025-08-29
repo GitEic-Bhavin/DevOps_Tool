@@ -138,3 +138,4 @@ We will serve the data to end user via dashboards using Power BI.
 **Azure Data lake storage Gen2** - for Store the lot of data from 100+ Data Sources.
 
 **Azure SQL DB** - For data warehouse
+
