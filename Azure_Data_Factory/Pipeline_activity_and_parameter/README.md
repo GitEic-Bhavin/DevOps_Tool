@@ -196,6 +196,21 @@ Excercise
 
 `Use Parameter and Azure key vault to provide access key of SA using secrets`
 
+  ### 1. Get all files
+
+  - Use Get Metadata activity on your Raw container folder.
+
+  - Configure it with Child Items.
+
+- Output
+
+```json
+  "childItems": [
+  { "name": "verde1.json", "type": "File" },
+  { "name": "verde2.json", "type": "File" }
+]
+```
+
 - Create new pipeline and drag & drop activity named **Get Metadata**
 
 - Rename it to Get File List
@@ -206,7 +221,7 @@ Excercise
 
 ![alt text](rawbrowse.png)
 
-## Use ForEach Activity drag and drop it
+  ### 2. Use ForEach Activity drag and drop it
 
   - Add Activity **GetFiles ChileItems** in settings of ForEach Activity
 
@@ -214,14 +229,41 @@ Excercise
 
   - Give Source and Dest/Sink browse path.
 
+  ### 3. Pass filename to dataset dynamically
+
   - Go to Parameter and Create Source parameter name**filename** and type **string** value leave.
 
+  - Use this parameter in dataset connections
+  
   - Go to Connections and look into File path for **Add dynamic content**
 
   ![alt text](adddynamictofileforsource.png)
 
   - Choose parameter **filename**
-  
 
+  ### 4. Pass the value from ForEach to dataset
 
+  - Click the Source dataset → FileName parameter → Dynamic content:
 
+```yaml
+@item().name
+
+# That means
+
+# On first loop → FileName = "verde1.json"
+# On second loop → FileName = "verde2.json"
+```
+
+  ### 5. Dynamic Output filename
+
+```yaml
+
+# strips .json and append .csv
+@concat(substring(item().name, 0, sub(length(item().name),5)), '.csv')
+```
+
+**OutPut for GetFileList Activiry**
+
+![alt text](outputgetlistfile.png)
+
+- This will work as input for ForEach activity
