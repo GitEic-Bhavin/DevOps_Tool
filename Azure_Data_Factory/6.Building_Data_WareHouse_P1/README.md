@@ -92,3 +92,97 @@ We will also build the tables for data warehouse
 
   ![alt text](tabledw.png)
 
+Build ADF Pipeline to copy master data files from raw conatiner to cleansed container
+---
+
+- Create new pipeline and Add activity Copy for copy master data from raw container to cleansed container
+
+- Create source dataset > Gen2 > CSV
+
+- We will copy all *.csv files using wildcard filepath
+
+- Source > Wildcard FilePath > raw/MasterData and *.csv
+
+- Check the box **Recursively**
+
+![alt text](source.png)
+
+- Add sink settings for File Path as Cleansed > masterdata.
+
+![alt text](sink.png)
+
+**NOTE** - At this time we want to copy the mastertdata CSV file from raw container to cleansed container as CSV file. So, we dont required **Copy Behavior** to transform CSV to txt or txt to CSV.
+
+**Keep Copy Behavior as None**
+
+- Keep File Extensions as *.csv
+
+- The file extension used to name the output files. 
+
+![alt text](fileex.png)
+
+- Run pipeline and view it
+
+- You can see here that all *.csv is copied from raw to cleansed contaier as it is.
+
+![alt text](rccopy.png)
+
+Copy ProductData > 3 *.csv files from Raw container to cleansed container
+---
+
+- Create new pipeline for ProductData
+
+- Add source and dataset Binary to copy as binary
+
+- Give File Path as raw / ProductData / *.csv
+
+![alt text](pdsource.png)
+
+- Keep Copy Behavior as None in Sink
+
+![alt text](pdsink.png)
+
+- Run pipeline and varify to cleansed > productdata containers.
+
+![alt text](cpbinarypd.png)
+
+We will learn about Loading files from cleansed containers into the staging tables in Azure SQL DB.
+---
+
+`We will loading data using single source datasets and single sink datasets`
+`To do this we will use ForEach and metadata activity`
+
+We don't required the metadata activity , we already have a created tabled in sql db for that.
+
+![alt text](metadatasd.png)
+
+- Create dataset for source in New folder 07-Excercise for cleansed container.
+- Choose Gen2 and CSV
+- Keep blank or leave the file path for container, folder name and file name
+- Bcz, we want to configure name of container folder and file name and Delimiter at run time
+
+![alt text](lsource.png)
+
+- Create Parameters Foldername, Filename and Delimiter
+
+![alt text](paramsource.png)
+
+- Assign this parameter into our dataset
+
+![alt text](assingparmds.png)
+
+- Create new dataset for Data warehouse in the SQL DB.
+
+- Choose Azure SQL DB in the dataset
+- Create new connections for sql db
+- Check the box for Edit manually for we can add dynamically the tablename
+- For that we have to create parameter
+
+![alt text](dssqldb.png)
+
+- Create Parameter named `TableName` for sqldb table
+- Add this parameter as dynamically as below
+
+![alt text](addparamsqltable.png)
+
+- Here, `stage` is schema
