@@ -295,3 +295,19 @@ Now, Send this data to database using sink
 2.Using SLQ DB Tables in Stored Procedures
 ---
 
+- use script `usp_Load_dimStore.sql` and run it
+
+- Clean dimStore table before run this query
+
+- Create Store Procedure and add its store procedure named 
+
+![alt text](spname.png)
+
+- Execute pipeline and see result
+
+![alt text](storeprcreateddb.png)
+
+- Re Execute this pipeline and see result
+
+![alt text](upsertdbreexecuted.png)
+
