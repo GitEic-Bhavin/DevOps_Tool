@@ -186,3 +186,71 @@ We don't required the metadata activity , we already have a created tabled in sq
 ![alt text](addparamsqltable.png)
 
 - Here, `stage` is schema
+
+Create metadata pipeline to load the files from cleansed container into the staging tables in sql db.
+---
+
+- create new pipeline `pl_LoadStaging_MasterAndProduct` in new folder 08-Excercise
+
+- created dataset for that , we will choose `sql_stage_dynamic` dataset.
+- use query > query > Run this query
+
+```sql
+select * from dbo.ADF_Metadata where FolderName in ('masterdata', 'productdata')
+```
+
+- We already created paremeter `TableName` - It will copy all csv files for `MasterData` and `ProductData` and created a new tables for each files of this 2 folders.
+
+- Thats for we created **TableName** Parameter to handle it dynamically.
+
+- If we doesn't create Parameter we have to create multiple datasets for each files.
+
+📂 cleansed/masterdata/
+
+  currency.csv → load into dimCurrency
+
+  territory.csv → load into dimTerritory
+
+📂 cleansed/productdata/
+
+  products.csv → load into dimProduct
+
+  categories.csv → load into dimCategory
+
+Dataset = "SQLTableDataset"
+
+Parameter = TableName
+
+Behind the scene the query will be like this
+
+```sql
+Query in dataset = SELECT * FROM @{dataset().TableName}
+```
+![alt text](sqlds.png)
+
+**Keep TableName values as _notSet**
+
+1. Dataset parameter has TableName = _notSet (default value)
+
+When you click Preview, ADF does not always substitute that _notSet into SQL.
+
+Instead, ADF says:
+
+“No real value was passed, so I’ll just fetch the first 100 rows using the dataset’s connection (without really using the TableName parameter).”
+
+So it doesn’t run but it will bypass
+```sql
+SELECT * FROM [_notSet];
+```
+2. Why does this happen?
+
+ADF pipeline datasets are parameterized, but in preview mode, ADF often ignores unresolved parameters (like _notSet) and just shows sample rows.
+
+_notSet is just a placeholder to keep the dataset valid until you pass a real value at runtime.
+
+Think of it as:
+
+Runtime → TableName must have a real value (like sqltable1).
+
+Design-time preview → ADF says, “I don’t have the actual value yet, so I’ll just try to show something without failing.”
+
