@@ -67,3 +67,28 @@ Overview of ELT Process
 **Step 3** - We will leverage the target database engine to do some of transformations.
 
 - We will build the dimenstions and facts to build the data warehouse.
+
+Building staging tables and data warehouse tables in Azure SQL DB.
+---
+
+The tabels in the staging layer are prefixed with schema stage.
+
+We will load the processed file from cleansed container into staging layer in Azure SQL DB.
+
+We will also build the tables for data warehouse
+
+![alt text](dbobject.png)
+
+1. Establish connection to Azure SQL DB via Azure Data Studio and run script `stage.CreateStageScehmaAndTables.Table.sql`. **Build Staging tables into Azure SQL DB**
+  - It will create stage tables 
+  - securtiy > schemas > stage tables is created
+
+  ![alt text](stagedb.png)
+
+**2. Build data warehouse tables**
+
+  - 2.1 New query > create dimension and facts tables for our data warehouse.
+  - Use script `dbo.CreateDimensionsAndFactTables.sql`
+
+  ![alt text](tabledw.png)
+
