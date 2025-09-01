@@ -228,6 +228,10 @@ Query in dataset = SELECT * FROM @{dataset().TableName}
 ```
 ![alt text](sqlds.png)
 
+- Keep _notSet as value of Parameter TableName and click on Preview
+
+![alt text](Previewsd.png)
+
 **Keep TableName values as _notSet**
 
 1. Dataset parameter has TableName = _notSet (default value)
@@ -254,3 +258,66 @@ Runtime → TableName must have a real value (like sqltable1).
 
 Design-time preview → ADF says, “I don’t have the actual value yet, so I’ll just try to show something without failing.”
 
+Use ForEach Activity
+---
+
+- create ForEach and Go to Settings > items > add dynamically > Choose Get Metadata (Output of Metadata Activity as input) 
+
+- wirte .value
+
+```bash
+@activity('Get Metadata').output.value
+```
+
+- Add Copy data Activity into this ForEach activity.
+
+- Choose data set we created before, `abs_csv_cleansed_stage_dynamic`
+
+- It will ask to give values of paramters `FolderName`, `FileName` and `Delimiter` by add dynamic.
+
+![alt text](addparmsvalue.png)
+
+- Lets do this for WildCards File Path for cleansed containers FolderName and FileName as  dynamically.
+
+![alt text](adddynamicwc.png)
+
+For Sink Create / Assign Dataset and Parameters
+---
+
+If we run this pipeline multiple times every times it will added the all tables data into sql table stage. either it is existing or not.
+
+To prevent from re added the all data , the existing data in sql should be removed
+
+use TRUNCATE TABLE "table_name"
+
+```sql
+TRUNCATE TABLE stage.@{item().TableName}
+```
+
+- Choose dataset for sql db is `sql_stage_dynamic` we already created for sink
+
+- Give Paramter TableName value as add dynamic 
+
+- **Pre-Copy Script** - To cleanup all talbes in sql db table named **stage** before loding new/existing data. bcz, if we not delete old data in sql and try to load new or updated data it will collaps or appended which can be a repeatadly data
+
+- Use  this script to remove data before load into sql db.
+
+- TRUNCATE TABLE "table_name" - will remove all data inot table named "stage" and @{itme.()} for each ForEach loops for every files in 2 folders `ProductData` and `MasterData`
+
+```sql
+TRUNCATE TABLE stage.@{item().TableName}
+```
+
+- Run this pipeline and review it.
+
+- Varify that the stage table is updated ?
+
+```sql
+--- Varify the stage.currency is updated in sql table.
+
+SELECT TOP (1000) [CurrencyCode], [CurrencyName]
+FROM [stage].[Currency]
+```
+
+`OutPut`
+![alt text](sqldbupdated.png)
