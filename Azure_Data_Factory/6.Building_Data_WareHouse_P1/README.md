@@ -321,3 +321,49 @@ FROM [stage].[Currency]
 
 `OutPut`
 ![alt text](sqldbupdated.png)
+
+
+**In this pipeline the source and dest schema is almost consistence. so we did not required the transformations of schema.**
+
+Create Pipeline for copy salesdata from cleansed container to sql db staging. each files has diff schemas.
+---
+
+In this pipeline, all files have diff shcmas and each store's files will have new data for daily.
+For that we required to delete TRUNCATE TABLE query from sink pre-copy script.
+
+- Add Lookup Activity Before GetMetadata Activity to ensure all tables should cleans before loading
+
+- Add dataset for that is sql_dynamic
+
+- Choose query option for that activity and add below things
+```sql
+TRUNCATE TABLE stage.Arancione_Sales
+TRUNCATE TABLE stage.Verde_Sales
+TRUNCATE TABLE stage.Celeste_Sales
+SELECT count(*) FROM stage.Arancione_Sales
+```
+
+- Give Parameter TableName value as _notSet
+
+![alt text](truncate_lookup.png)
+
+- Go to GetMetaData Activity and edit query in settings like below for only for salesdata folder
+
+```sql
+select * from dbo.ADF_Metadata where FolderName in ('salesdata')
+```
+
+- Preview data for salesdata folder
+
+![alt text](pvsalesdata.png)
+
+- Run this pipeline and see result
+
+Before executed
+
+![alt text](be.png)
+
+After executed
+
+![alt text](ae.png)
+
