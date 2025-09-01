@@ -367,3 +367,39 @@ After executed
 
 ![alt text](ae.png)
 
+Combine data of 3 product table `stage.Arcoine_Product, stage.Verd_Product, stage.caleste_Product` into single table `stage.Product`
+
+- use sql script for that is `usp_LoadStageProduct.sql`
+
+- create new pipeline `pl_LoadStagin_Product` into 08-Excercise
+
+- Add **Store Procedure** Activity and add beloe things
+
+![alt text](storepr.png)
+
+- Run pipeline and see result into state.Product table
+
+![alt text](stagepresult.png)
+
+
+Combine 3 diff sales table `stage.Arancione_Sales, stage.Celeste_Sales and stage.Verde_Sales` into single table named `stage.Sales`
+---
+
+- Run this script `usp_LoadStageSales.sql`
+
+- table will created `dbo.usp_LoadStageSales` into Programability> Stored Procedures
+
+- Use this table into pipeline of store procedure
+
+![alt text](salespscript.png)
+
+- Create new pipeline for store procedure as above we created
+
+![alt text](salesstorepr.png)
+
+- Run pipeline and see result
+
+![alt text](sales-result.png)
+
+
+
