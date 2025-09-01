@@ -311,3 +311,8 @@ Now, Send this data to database using sink
 
 ![alt text](upsertdbreexecuted.png)
 
+Type 2 Dimensions
+---
+
+![alt text](d2.png)
+
