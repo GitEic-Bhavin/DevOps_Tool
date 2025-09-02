@@ -24,5 +24,4 @@ You will promted for Azure SQL DB Password and user name and give it
 
 You can see all the tables into sql db as below
 
-![alt text](sqldbtables.png)
-
+![alt text](sqldbtables1.png)
