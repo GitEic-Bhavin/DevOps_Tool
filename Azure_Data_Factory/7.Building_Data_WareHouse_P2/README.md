@@ -316,3 +316,70 @@ Type 2 Dimensions
 
 ![alt text](d2.png)
 
+There are 2 approaches to build Type 2 Dimensions
+1. Using Mapping data Flows
+2. Using Stored Procedures
+
+1.Using Mapping data Flows
+---
+
+- Create source dataflow > create new dataset
+
+- Choose stage.Product in table name.
+
+- Create another source dataflow > create new dataset
+- Choose dbo.dimProduct in table name.
+
+- Add filter after our source of dimProduct
+
+![alt text](addfilter.png)
+
+`I want to select the Active Product Records only, and don't want to compare this 2 attributes of stageProduct and dimProduct with expired records.`
+
+Add filter to get Active and latest updated records from table for Type2 dim
+
+![alt text](filset.png)
+
+Example Before update
+---
+
+This is older records indicated by - 0 
+
+| EmployeeID | Name  | City      | StartDate  | EndDate    | IsRowCurrent |
+| ---------- | ----- | --------- | ---------- | ---------- | ------------ |
+| E01        | Anita | Delhi     | 2020-01-01 | 2021-05-31 | 0            |
+| E01        | Anita | Bangalore | 2021-06-01 | 9999-12-31 | 1            |
+
+Example After update
+---
+
+This is Active latest records indicated by - 1
+
+| EmployeeID | Name  | City      | StartDate  | EndDate    | IsRowCurrent |
+| ---------- | ----- | --------- | ---------- | ---------- | ------------ |
+| E01        | Anita | Delhi     | 2020-01-01 | 2021-05-31 | 0            |
+| E01        | Anita | Bangalore | 2021-06-01 | 2023-08-31 | 0            |
+| E01        | Anita | Mumbai    | 2023-09-01 | 9999-12-31 | 1            |
+
+
+**Add Join Transformations**
+
+- **This Join transformation is used to detect new or changed records by comparing staging input (stageProduct) with the current dimension (sourceDimProduct), so the pipeline knows whether to insert, update, or skip.**
+
+![alt text](joins.png)
+
+- Add Conditional Split Transformations after joins
+
+- Set Stream name in Split Conditions as NewProducts and set conditions `isNull(sourcedimProductType2Ex9@ProductNo)`
+
+![alt text](condsplit.png)
+
+2.Using Store Procedure
+---
+
+- Run this script `usp_Load_dimProduct.sql`
+
+- Choose store procedure name `[dbo].[usp_Load_dimProduct]`
+
+- Run Debug.
+
