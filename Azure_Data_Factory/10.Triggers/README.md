@@ -29,3 +29,4 @@ Ex. Every sunday
 - Ex. Execute a trigger based on another trigger.
 
 - TO EXECUTE2 PIPELINE ONE BY ONE USE ACTIVITY `EXECUTE PIPELINE` AND VCONNECT TO EACH OTHER
+
