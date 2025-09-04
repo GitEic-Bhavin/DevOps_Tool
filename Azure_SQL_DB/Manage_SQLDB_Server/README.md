@@ -90,3 +90,153 @@ WITH DEFAULT_SCHMA=db0;
 ALTER ROLE db_owner ADD MEMBER user1
 ```
 
+SQL Server on Azure Virtual Machine (IaaS)
+---
+
+- Infrastructure as a Service (IaaS) → You get a full Windows VM with SQL Server installed.
+
+- You manage the OS, SQL Server instance, patching, backups, HA, etc.
+
+- Works just like an on-prem SQL Server VM.
+
+- You can use:
+
+  - Agent jobs
+
+  - Cross-database queries
+
+  - Full SQL Server features not available in Azure SQL DB
+
+- Billed for:
+
+  - VM compute (cores, RAM, storage)
+
+  - SQL Server license (included or BYOL)
+
+
+
+Azure SQL Server Virtual Machines
+---
+
+- Choose server img
+
+![alt text](serverimg.png)
+
+- Choose VM and Sql Server Img
+
+![alt text](sqlvmimg.png)
+
+**To connect this Windows VM via RDP**
+- Go to remminia and new connections. Put your VM IP.
+- Enter Your VM Credentials.
+
+<!-- **To connect your SQL Server VM**
+- Go to that VM > Settings > SQL Server Configurations
+
+![alt text](VMsettings.png)
+ -->
+
+**To connect your sql server VM**
+
+1. RDP - Just open remminia > Put your VM Public IP.
+2. Give VMs Creds.
+
+**To connect your SQL Server instance DB**
+
+1. RDP into VM
+2. Look for SQL Server Management service > Give SQL DB Creds > Check the box of `Trust Certificate`.
+
+**To create database**
+
+![alt text](createdb.png)
+
+**To create table**
+
+![alt text](createtable.png)
+
+Stretch DATABASE
+---
+
+**Normal Setup (without Stretch Database)**
+
+- You have SQL Server (on your VM).
+
+- Inside SQL Server, you have databases.
+
+- Users authenticate to SQL Server → then access the databases → then the tables.
+
+- Everything (hot + cold data) is stored locally inside the VM’s disk.
+
+**With Stretch Database**
+
+- You still authenticate to your SQL Server instance (the same way as before).
+
+- But, for certain tables that are very large, you enable Stretch Database.
+
+- **After enabling:**
+
+- Hot data (recent rows) → stays inside your VM database.
+
+- Cold data (old rows) → gets moved to Azure SQL Database storage.
+
+👉 Important: You don’t connect separately to Azure SQL Database for this — SQL Server (your VM) handles it.
+
+
+**NOTE: Strech database feature is already deprecated and retired.**
+
+
+Migrate your on-Premises sql database to azure cloud
+---
+
+1. Use Data Migration Assistance
+2. Azure Data Migration service
+
+1. Data Migration Assistance
+---
+
+- Can run assessments for migratig from on-premise sql server to azure cloud.
+- Supported target server types:
+
+  - Azure SQL Database 
+  - Azure SQL Database Managed instance
+  - SQL Server on Azure VM
+  - SQL Server On premises
+
+- You required to instll data migration Assistance
+
+- First, before migrate your database to azure cloud , you required to assess that source db.
+
+![alt text](assessdb.png)
+
+- Select report types
+
+![alt text](report.png)
+
+- Provide Source SQL db cred
+
+- Add Database
+
+![alt text](addr.png)
+
+- Start assessment
+
+
+
+
+What is azure synapse analytics ?
+---
+
+It is a analytics service on the azure and combines: Data integration, Enterprise data warehousing, Big data analytics
+
+What is Azure Synapse Link for SQL Server ?
+---
+
+It will automatically captures data changes in SQL Server and sends it to azure synapse analytics
+
+![alt text](AsL.png)
+
+You have a on-prem SQL server and have updated and latest data.
+
+Azure Synapse Link will cpture this chagnes and via `Data Transfer` it will send to Azure Synapse Lake Database.
+
+Azure Synapse Lake Database will store this data and serve for analytics.
