@@ -107,3 +107,121 @@ The metrics coming from the host is divided into 3 apps
 1. Agent related metrics
 2. ntp metrics
 3. system metrics
+
+What is Tagging ?
+---
+
+Tags are a way of adding dimensions to datadog telemetries so they can be filtered, aggragated and compared in datadog visualizations.
+
+In Datadog, tagging is the process of attaching key-value metadata (labels) to your metrics, traces, logs, and other monitored data. Tags help you organize, filter, group, and search your data in dashboards, monitors, and alerts.
+
+
+You can assing tags via Datadog UI , datadog.yaml
+
+By datadog.yaml , write tags anywhere in yaml file
+
+```yaml
+tags:
+  - "os":"ubuntu"
+  - "os-version": "20.04"
+```
+
+**Processes**
+Datadog’s Live Processes gives you real-time visibility into the processes running on your infrastructure. Use Live Processes to:
+
+- View all of your running processes in one place
+- Break down the resource consumption on your hosts and containers at the process level
+- Query for processes running on a specific host, in a specific zone, or running a specific workload
+- Monitor the performance of the internal and third-party software you run using system metrics at two-second granularity
+- Add context to your dashboards and notebooks
+
+Bydefault this live process is disabled, if you have installed datadog-agent 6 or 7 version follow the below steps:
+
+- Edit main config file located at `/etc/datadog-agent/system-probe.yaml`
+```yaml
+process_config:
+  process_collection:
+    enabled: true
+```
+
+- To apply this changes , restart the datadog agent
+```bash
+sudo systemctl restart datadog-agent.service
+```
+
+![alt text](process.png)
+
+- You can filter the process by tags
+
+![alt text](filtand.png)
+
+- You can filter by AND, OR, !
+
+![alt text](filteror.png)
+
+What is Scrumbing ?
+---
+
+- your applications and processes might contain some sensitive data like passwords, access tokens and all, which should not be visible in any of the views on data.
+
+- When the Datadog Agent collects process information (via process_agent), it can capture the full command line used to start processes.
+
+- This command line might contain secrets. Without scrubbing, these secrets could show up in Datadog dashboards, logs, or traces.
+
+- Scrumb will hide this sensitive data and bydefault datadog has enabled this scrumb.
+- This is reserved key used by datadog.
+![alt text](scrumbstr.png)
+
+**What about custom sensitive words ?**
+
+- Go to main config file and add lines to enable scrumb and our custom sensitive words
+```yaml
+process_config:
+  process_collection:
+    enabled: true
+    scrub_args: true
+    custom_sensitive_words: ['type', 'user']
+```
+
+- To create cutome process 
+- Click on New metrics and fileter for process, choose metrics name and create
+
+![alt text](cuspr.png)
+
+- But , This is not good approach. bcz this is work at single os level.
+- What if you have to monitor all containers running of 100+ Hosts ?
+
+- Here, You have to use Docker-Agent
+
+- For datadog-agent 6+ , pull image from docker hub.
+```bash
+docker pull datadog/agent
+```
+
+- To setup docker-agent you have to pass your DD_API_KEY and DD_SITE.
+```bash
+docker run -d --cgroupns host --pid host --name dd-agent -v /var/run/docker.sock:/var/run/docker.sock:ro -v /proc/:/host/proc/:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e DD_SITE=<DATADOG_SITE> -e DD_API_KEY=<DATADOG_API_KEY> gcr.io/datadoghq/agent:7
+```
+
+![alt text](dockeragent.png)
+
+**Metrics Types:**
+
+1. Count - Represents the total number of event occurences in one time interval.
+Ex. Total no. of connections made to db
+
+2. Rate - Represents the total number of event occurences in Given Time Interval.
+
+Rate = Total count in the interval / Length of the time interval.
+
+3. Gauge - Gauge takes the last value reported int the interval.
+Ex. system.temp[71,71,71,72]
+Gauge = system.temp[72]
+
+
+- Gauge used for measuring values like temperature, current memory usage, the number of active threads.
+
+4. Sets - Sets count the number of unique values passed to a key.
+
+5. Histogram - Represent the statistical distribution of a set of values calculated in one time interval.
+- The agent aggregates and generates new metrics using the data of flush interval of 10 sec.
