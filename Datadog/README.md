@@ -225,3 +225,202 @@ Gauge = system.temp[72]
 
 5. Histogram - Represent the statistical distribution of a set of values calculated in one time interval.
 - The agent aggregates and generates new metrics using the data of flush interval of 10 sec.
+
+
+**Customer Metrics**
+- Customer metrics are useful in monitoring critical applications KPIs like:
+
+  - No. of visitors on website.
+  - Avg customer cart size.
+  - Request latency.
+  - Performance distributions.
+
+**Customer Metrics Properties**
+- **Metric Name** - Name of the custom metrics.
+- **Metric Values** - Value of cusom metrics. Must be 32-bit and should not reflect dates or timestamps.
+
+- **TimeStamp** - Can't be more than 10 minutes in the future or more than 1 hr in the past.
+
+- **Tags** - Tags associated to the metrics.
+- **Metric Type** - can be count, rate, gauge, set, histogra, or distributions.
+
+- **Interval** - Flush interval for rate and count type.
+
+**Custom Metrics Submission Type**
+- Custom metrics can be sent to datadog using multiple submission types.
+
+- There are 4 submission types
+**1. Agent Check** - You can submit metrics like count, gauge, rate, histogram.
+**2. DogstatsD** -
+**3. Powershell** - 
+**4. API** - 
+
+  - **Count** - To submit count type metrics, `monotonic count` or `count function` is used.
+  - `monotonic count()` - Used to track a new COUNT metrics that **Always increases**.
+  - Sample that have a lower value than the previous samples are ingnored.
+  - `count` is used to represent the metrics like - **No. of requests served, task completed or errors encountered.**
+
+  - Stored with a COUNT Mertics type in datadog.
+
+  `monotonic count functions template`
+
+```bash
+self.monotonic_count(name, value, tags=None, hostname=None, device_name=None)
+```
+
+- Examples: First execution [3,5,9] -- (9-3)=6 , Second executions [10,11] -- (11-9) =2.
+
+  `count function` - **count()** - Submit the **No. of events** that occured during that check interval.
+
+  - Ex. First Execution [3,5,9] -- 3
+        Second Execution [10,11] -- 2
+  `count function` - 
+```bash
+self.count(name,value,tags=None, hostname=None, device_name=None)
+```
+
+- A custom metric in Datadog is not just the metric name.
+It’s identified by: `metric_name + all tag value combinations`
+
+- So if you change a tag’s value, Datadog considers it a different custom metric.
+- Suppose you emit this metric in your Python check: `self.count("file.modified.count", 5, tags=["env:prod", "region:us"])`  → counts as 1 custom metric.
+
+- If you assing multiple tags:
+- Even though the metric name is the same (file.modified.count), you have 3 unique tag sets → 3 custom metrics.
+```py
+file.modified.count{env:prod, region:us}
+file.modified.count{env:prod, region:eu}
+file.modified.count{env:dev, region:us}
+```
+
+
+What if you want to query only that metrics having new tags and remaining all other tags shall be non variable.
+---
+
+- At this time, you have to index that new tags to keep it variable for this mertics and remaining all other tags will be non-variables.
+
+- Choose custom metrics on datdog UI
+- Click on mamanged tags
+
+![alt text](mtag.png)
+
+- Choose new tags from include tags
+
+![alt text](itag.png)
+
+- If you want to **index a bulk of tags**, go to **Configure Metrics** and choose your tags
+
+![alt text](btag.png)
+
+
+- **Rate()**
+
+![alt text](ratem.png)
+
+- To create custom_rate metrics
+- add custom_rate.yaml at /etc/datadog-agent/checks.d/custom_rate.py
+
+- There are 2 ways to submit our custom metrics to datadog.
+- This is the `1st way` of submit our custom metrics using **Agent check** in py.
+- add /etc/datadog-agent/conf.d/custom_rate.d/custom_rate.yaml
+```yml
+init_config:
+
+instances:
+  - min_collection_interval: 60
+```
+- restart the datadog-agent
+```bash
+sudo systemctl restart datadog-agent
+```
+
+![alt text](rateop.png)
+
+
+- **Histogram**
+
+- Use this function to create histogram
+```py
+self.histogram(name,value,tags=None,hostname=None,device_name=None)
+```
+
+- The `2nd way` of submit our custom metrics is using **`DogstatsD`**.
+
+- To submit our custom metrics we will use python web applications code.
+
+```py
+import http.server
+
+APP_PORT = 81
+
+class HandleRequests(http.server.BaseHTTPRequestHandler):
+
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header("Content-type", "text/html")
+        self.end_headers()
+        self.wfile.write(bytes("<html><head><title>First Application</title></head><body style='color: #333; margin-top: 30px;'><center><h2>Welcome to Datadog-Python application.</center></h2></body></html>", "utf-8"))
+
+if __name__ == "__main__":
+    server = http.server.HTTPServer(('localhost', APP_PORT), HandleRequests)
+    server.serve_forever()
+```
+
+- **DogstatsD Metircs supported** is
+  - count
+  - Gauge
+  - Set
+  - Timer
+  - Histogram
+  - Distributions
+
+DogstatsD - Count
+---
+
+**Increment()**
+- Used to increment a COUNT metric.
+- Used to represents **Monotonically increasing** counter whose value **Can only increase** or it can be **reset to zero on restart**.
+- Use cases - **Number of requests served, task completed or errors encountered**.
+
+```bash
+increment(<METRIC_NAME>,<SAMPLE_RATE>,<TAGS>)
+```
+
+- Sample rate specifies **What percent of generated metrics are sent to Datadog**.
+
+**decrement()**
+- Used to decrement a COUNT Metrics.
+
+```bash
+decrement(<METRIC_NAME>,<SAMPLE_RATE>,<TAGS>)
+```
+
+Now, add or make instrumentation to our web app for DogstatsD
+---
+
+```py
+import http.server
+from datadog import initialize, statsd # This is added
+
+APP_PORT = 81
+options = {'statsd_host':'localhost', 'statsd_port':8125} # Bydefault, DogstatsD is enabled over Port 8125
+
+class HandleRequests(http.server.BaseHTTPRequestHandler):
+
+    def do_GET(self):
+        statsd.increment('app.http.request.count', sample_rate=1, tags=["env:dev", "app:pythonapp"]) # This is we instrumented our apps, to serve the total requests counts.
+        self.send_response(200)
+        self.send_header("Content-type", "text/html")
+        self.end_headers()
+        self.wfile.write(bytes("<html><head><title>First Application</title></head><body style='color: #333; margin-top: 30px;'><center><h2>Welcome to Datadog-Python application.</center></h2></body></html>", "utf-8"))
+
+if __name__ == "__main__":'
+    initialize(**options)
+    server = http.server.HTTPServer(('localhost', APP_PORT), HandleRequests)
+    server.serve_forever()
+```
+
+- You have to install datadog library for pythons.
+```bash
+sudo pip install datadog
+```
