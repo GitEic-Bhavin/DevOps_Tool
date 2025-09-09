@@ -587,3 +587,95 @@ There are multiple types of monitor like Host, Metrics, Forecast, APM etc.
 
 ![alt text](rnotify.png)
 
+Logs Collections
+---
+
+- Log management is the practice of continuously gathering, storing, processing and analyzing data from varied programs and apps.
+
+- Datadog's Log Management Service **Collects logs across multiple logging sources** - server, container, cloud, apps etc.
+
+**Logging without Limits**
+- You are charged for the volume of logs you send to LMS.
+- One way to reduce the cost is To Filter the logs before sending them to Servers.
+
+**Datadog Solutions** - Removes this limitations by `decoupling the log ingestion process` from indexing which is known as `logging without limits`.
+
+- You have to configure your logs by choosing which ones to index, retain or archive.
+
+
+Go to Datadog UI > Logs > Choose Python app as source logs.
+
+create `python.d` at /etc/datadog-agent/conf.d/conf.yaml
+
+```yml
+#Log section
+logs:
+
+    # - type : file (mandatory) type of log input source (tcp / udp / file)
+    #   port / path : (mandatory) Set port if type is tcp or udp. Set path if type is file
+    #   service : (mandatory) name of the service owning the log
+    #   source : (mandatory) attribute that defines which integration is sending the log
+    #   sourcecategory : (optional) Multiple value attribute. Can be used to refine the source attribute
+    #   tags: (optional) add tags to each log collected
+
+  - type: file
+    path: "/path/to/python-app/Python_Logging/log.json"
+    service: myapplication
+    source: python
+    sourcecategory: sourcecode
+    #For multiline logs, if they start with a timestamp with format yyyy-mm-dd uncomment the below processing rule
+    #log_processing_rules:
+    #   - type: multi_line
+    #     pattern: \d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])
+    #     name: new_log_start_with_date
+```
+
+- Create your python app in directory of `Python_Logging`
+```py
+if __name__ == '__main__':
+    from selenium.webdriver.common.by import By
+    from selenium.webdriver.support.ui import WebDriverWait
+    from selenium.webdriver.support import expected_conditions as EC
+    import undetected_chromedriver as uc
+    import logging
+    from pythonjsonlogger import jsonlogger 
+
+    # Chrome options
+    options = uc.ChromeOptions()
+    options.add_argument("--incognito")
+    driver = uc.Chrome(options=options)   # Linux: no executable_path needed
+    driver.maximize_window()
+
+    # logging setup
+    logger = logging.getLogger()
+    logHandler = logging.FileHandler(filename='/path/to/python-app/Python_Logging/log.json')
+    formatter = jsonlogger.JsonFormatter()
+    logHandler.setFormatter(formatter)
+    logger.addHandler(logHandler)
+    logger.setLevel(logging.INFO)
+
+    try:
+        driver.get("https://www.amazon.com/")
+
+        # Wait up to 10s for product element
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, "//div[contains(@class,'product')]"))
+        )
+        logger.info("Product element found", extra={"referral_code": "79vn4et"})
+
+    except Exception as e:
+        logger.info("Product not found in website", extra={"referral_code": "79vn4et"})
+        logger.error(str(e))
+
+    input("Press Enter to close browser...")  # Keeps browser open for inspection
+    driver.quit()
+```
+
+create log.json file to store your python apps logs.
+
+Run this apps.
+
+This will sends your python apps logs to your datadog.
+
+![alt text](enablelog.png)
+
