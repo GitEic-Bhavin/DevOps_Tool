@@ -679,3 +679,117 @@ This will sends your python apps logs to your datadog.
 
 ![alt text](enablelog.png)
 
+Live Tails
+---
+
+- It will gives you all logs like excluded, included.
+- It will very usefull while live deployment, changes etc. At this time you can see all logs.
+
+![alt text](gbyf.png)
+
+- Group by Patterns for all logs which will group of same patterns like error, exceptions etc.
+
+![alt text](gbyp.png)
+
+- Group by Transactions - Will aggregate the index logs according to sequence of events such as a user session or a request processed  across multiple microservices.
+
+Integrations
+---
+
+There are 3 types of integrations
+
+1. Agent-based
+2. Authentication-based(Crawler)
+3. Library
+
+1. Agent-based
+- Installed with Datadog Agent.
+- Uses python class method called **check** to define the metrics to collect.
+- This includes Activemq, Airflow, Cassandra etc.
+
+2. Authentication-based (Crawler)
+- You proivde **Credentials** for obtaining metrics with the API.
+- This includes Slack, AWS, Azure, GCP and PagerDuty.
+
+3. Library
+- Use the Datadog API to allow monitoring apps based on the language they are writtern in.
+- Node.js or Pythons.
+
+
+APM Setup
+---
+
+- Setting up Datadoh IPM Across hosts , containers pr serverless functions.
+
+Step1 - Conf the datadog agent for APM. - Datadog.yaml file present in root directory.
+Enabled it from datadog.yaml by uncomment it.
+```yaml
+# apm_config:
+
+  ## @param enabled - boolean - optional - default: true
+  ## @env DD_APM_ENABLED - boolean - optional - default: true
+  ## Set to true to enable the APM Agent.
+  #
+  # enabled: true
+```
+**Datadog APM Agent port is listions on port 8126**
+
+Step2 - Add datadog tracing lib to code.
+
+You need to install `ddtrace`
+```bash
+pip install ddtrace
+```
+
+This will automatically instrument your apps.
+You have to run your apps with ddtrace
+
+```bash
+ddtrace-run python3 <Your_Python.py>
+```
+
+Profiling
+---
+
+- Profiler shows How much work each function in your code is doing.
+
+- goes deeper inside your code and shows how much CPU time / memory each function in your code is using.
+
+- If your apps spikes at 80% cpu. This profiling will find which functios cause it to spike 80% of cpu or more memroy usgae etc.
+
+UI Monitor
+---
+
+**Real User Monitoring (RUM)**
+- It captures and analuzes the transaction done by users on a website or apps.
+- It will collects detailed data about a user's interaction with an apps. Ex - Page load events, HTTP requests, Frontend Apps Crashes.
+
+- Real world ex: 
+  - Assess the current speed of website
+  - E-commerce websites track user activity to identify the reasons of incomplete orders.
+
+  - Login failures.
+
+How RUM Works ?
+---
+
+- Add the script which will install Datadog RUM SDK to Frontend Code like in html frontend file.
+
+- While user made a request to your apps, it will auto installed this RUM SDK on that user's device.
+
+- Then it will start to collecting data and sending to datadog server.
+
+- Go to real user monitoring > create new apps.
+
+- Select your apps like Js, Flutter etc
+- Give env as dev and choose CDN Sync for faster page load.
+
+- It will create RUM SDK Installation script.
+
+![alt text](rum.png)
+
+- To see which type of data collected by RUM SDK .
+- Go to RUM Explorer and see it
+
+![alt text](rumexp.png)
+
