@@ -134,3 +134,11 @@ kubectl apply -f dd-agent.yml
   - Configure for cpu and memory usage for all pods.
 
 ![alt text](dashcm.png)
+
+- Kubernetes monitor 
+
+![alt text](k8sdep.png)
+
+- Monitor Pods
+
+![alt text](mpod.png)

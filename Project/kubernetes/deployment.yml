@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: nodejs-app
-        image: bhavin1099/nodejs-app:v1.1
+        image: bhavin1099/nodejs-app:v1.3
         ports:
         - containerPort: 3000 
 
@@ -47,6 +47,19 @@ spec:
             configMapKeyRef:
               name: redis-config
               key: REDIS_PORT
+
+        - name: DD_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: DD_SERVICE
+          value: "nodejs-app"
+        - name: DD_ENV
+          value: "dev"
+        - name: DD_VERSION
+          value: "1.0.0"          
+
+
         
         volumeMounts:      # 👈 Inside container                     # 👈 Mount PVC into container
         - name: azurefile-storage

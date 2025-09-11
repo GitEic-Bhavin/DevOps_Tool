@@ -1,3 +1,6 @@
+// Enable Datadog APM Tracing
+require('dd-trace').init();
+
 const express = require('express')
 const bodyParser = require('body-parser')
 const redis = require('redis')

@@ -9,7 +9,11 @@ spec:
       apiSecret:
         secretName: "datadog-secret"
         keyName: "api-key"
+    tags:
+      - "env: dev"
   features:
+    liveProcessCollection: # To install process agent for live process
+      enabled: true
     apm:
       instrumentation:
         enabled: true
@@ -25,6 +29,21 @@ spec:
     logCollection:
       enabled: true
       containerCollectAll: true
+
+    otelCollector:
+      enabled: true
+      ports:
+        - containerPort: 4317
+          hostPort: 4317
+          name: "otel-grpc"
+        - containerPort: 4318
+          hostPort: 4318
+          name: "otel-http"
+    usm:
+      enabled: true
+    npm:
+      enabled: true
+
   override:
     clusterAgent:
       containers:
