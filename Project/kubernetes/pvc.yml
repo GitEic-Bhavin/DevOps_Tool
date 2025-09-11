@@ -1,0 +1,14 @@
+# -------------------------------
+# PersistentVolumeClaim (Azure File Share)
+# -------------------------------
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: azurefile-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: azurefile-csi-premium   # or azurefile-csi for standard tier
+  resources:
+    requests:
+      storage: 5Gi

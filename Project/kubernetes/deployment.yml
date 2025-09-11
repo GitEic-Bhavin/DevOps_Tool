@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+
+kind: Deployment
+
+metadata:
+  name: nodejs-app-deployment
+spec:
+  replicas: 2
+
+  selector:
+    matchLabels: 
+      app: nodejs-app
+
+  template: 
+    metadata:
+      labels:
+        app: nodejs-app
+
+    spec:
+      containers:
+      - name: nodejs-app
+        image: bhavin1099/nodejs-app:v1.1
+        ports:
+        - containerPort: 3000 
+
+        env:
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: PORT
+
+        - name: NODE_ENV
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: NODE_ENV
+
+        - name: REDIS_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: redis-config
+              key: REDIS_HOST
+
+        - name: REDIS_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: redis-config
+              key: REDIS_PORT
+        
+        volumeMounts:      # 👈 Inside container                     # 👈 Mount PVC into container
+        - name: azurefile-storage
+          mountPath: /app/data                 # 👈 Change path if your app needs a specific folder
+      volumes:                                 # 👈 Define PVC volume
+      - name: azurefile-storage
+        persistentVolumeClaim:
+          claimName: azurefile-pvc
