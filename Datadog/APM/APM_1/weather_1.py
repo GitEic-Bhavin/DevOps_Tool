@@ -1,3 +1,46 @@
+## use .env file to load env vars and sampling vars
+from dotenv import load_dotenv
+import os
+
+# Load variables from .env file
+load_dotenv()
+
+# Now Datadog will see them when you run with ddtrace-run
+############
+# --- ADDED CODE START ---
+import logging
+import sys
+
+# Load variables from .env file
+load_dotenv()
+
+# Create a logger instance
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler(os.getenv("LOG_FILE", "/var/log/weather-app.log")),
+        logging.StreamHandler(sys.stdout)
+    ]
+)
+log = logging.getLogger(__name__)
+
+# --- ADDED CODE END ---
+#####################
+
+# # # # 
+# To enabled trace dd-trace into this python apps. Like we did into app.js for nodejs apps.
+
+# import os
+# from ddtrace import patch, tracer
+
+# # Apply auto instrumentation
+# patch(all=True)
+
+# # Optional: set sampling rules (50%)
+# os.environ["DD_TRACE_SAMPLING_RULES"] = '[{"service":"weather-app","sample_rate":0.5}]'
+
+# # # #
 from flask import Flask,request,render_template,abort
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
@@ -34,9 +77,15 @@ def tocelcius(temp):
     return str(round(float(temp) - 273.16,2))
 
 def get_default_city():
+    #### Added code for send logs to .log file in local and also send to datadog ##
+    log.info("Returning default city: Delhi")
+    #### End Code
     return 'Delhi'
     
 def save_to_database(weather_details):
+    #### Added code for log
+    log.info(f"Saving weather details for {weather_details['cityname']} to database")
+    #### End Code
     weather = Weather(country_code=weather_details["country_code"],
                     coordinate=weather_details["coordinate"],
                     temp=weather_details["temp"],
@@ -83,4 +132,7 @@ def weather():
     return render_template('index.html',data=data)
 
 if __name__ == '__main__':
+    ## Added code for send logs to .log file in local and also send to datadog ##
+    log.info("Starting Flask application...")
+    ## Ended Code ##
     app.run(host='0.0.0.0', port=8000)

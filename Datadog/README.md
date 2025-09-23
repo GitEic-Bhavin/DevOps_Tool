@@ -748,6 +748,118 @@ You have to run your apps with ddtrace
 ddtrace-run python3 <Your_Python.py>
 ```
 
+APM Sampling Trace pipelines
+---
+- Sampling is done at Agent level by datadog.yml and service or library level by using environment variables.
+
+![alt text](apmpld.png)
+
+**HOST SIDE CONFIGURE PIPELINES**
+
+**What is Head-Based Sampling?**
+
+Head-based sampling is a trace sampling strategy where the Datadog Agent (or tracer library) decides whether to keep or drop a trace at the very beginning ("the head") of the request lifecycle.
+
+When your app receives a request, the tracer immediately decides (based on configured sampling rate) whether that trace will be collected and sent to Datadog.
+
+If the trace is kept, all spans under it are also collected.
+
+If it is dropped, nothing for that trace is reported.
+
+**DD_APM_MAX_TPS=5**
+- It will receive 5 traces / second and rest of all other traces will be dropped.
+
+**Agent Level Sampling Set**
+Set `max_traces_per_second` in datadog.yml, Default value is 10.
+
+**Library** - Set env vars in dd-trace run command.
+`DD_TRACE_SAMPLE_RATE` applies to all root service for library.
+Ex. value is set to **0.1** means **10% of traces are sends**.
+
+Value is 0 to 1.
+
+ - `DD_TRACE_SAMPLING_RULES` - for 80% of traces sampling for Service A and 20% of traces sampling for Service B.
+
+ ```bash
+ DD_TRACE_SAMPLING_RULES=[{"service":"A", "sample_rate":0.8},{"service":"B","sample_rate":0.2}]
+ ```
+
+ **Error Span Sampling**
+
+- **What is an Error Span?**
+
+- In APM, a span represents a unit of work (e.g., an HTTP request, a DB query).
+- If the span encounters an error (exception, failed status code, etc.), it is marked as an error span.
+
+👉 Even if your normal sampling rate is low (e.g., you only keep 10% of traces), Datadog tries to keep 100% of error spans (or at least a higher rate).
+
+This ensures:
+
+- You don’t miss critical errors just because of sampling.
+
+- Troubleshooting is easier because all (or most) error traces are visible in Datadog UI.
+
+- Set `error_per_seconds` in datadog.yml, default value is 10.
+
+- Some traces are rare (like an API endpoint called only 1 time per hour).
+- ⚠️ These may also get dropped because of normal sampling.
+
+- Rare operations are always kept, even if normal sampling would drop them.
+
+- So you can debug uncommon requests or edge-case bugs.
+
+🔹 Example
+
+- **GET /health** = 1,000,000 spans per hour
+
+- **POST /register** = 5 spans per hour
+
+- Without rare span sampling → You may only see GET /health traces.
+With rare span sampling → Datadog keeps some POST /register traces so you don’t lose them.
+
+**Enabled Rare span Sampling**
+
+`DD_APM_DISABLE_RARE_SAMPLER: "true" or "false"` in datadog.yml
+
+Trace Metrics
+---
+
+- Trace metrics capture the **request counts**, **error counts**, **latency measure** of the requests.
+- It is directly connected to apps and Datadog-agent.
+
+Runtime Metreics
+---
+
+- To gain more insightes into an apps performance.
+- Allows to view heap, non-heap memory usage as well as garbage collection activity for apps.
+
+- Enabled by setting `DD_RUNTIME_METRICS_ENALBED: true` in datadog.yml
+
+- Bydefault runtime metrics from apps are sent to the datadog agent with **DogStatsD over port 8125**.
+
+- For **Containerized agent**, `DD_DOGSTATSD_NON_LOCAL_TRAFFIC: true` and port **8125** is opend in the agent.
+
+**Server Side Pipelines**
+
+![alt text](sspl.png)
+
+- Trace Explorer **Live Search** - will serach all the spans using any tag or any spans.
+- It is similar to Live Tails.
+
+**Generate Custom Metrics** - Will generate custom metrics from ingested/collected spans and use this generated custom metrics for queries and comparisions.
+
+- It has retention period of 15 months.
+
+**Retention Filters** - Configured to retain traces for 15 days.
+
+**Dashboards** - Trances and Spans will use to serve by APM views.
+- APM View allows to slice and dice that traces in multiple way for troubleshooting.
+
+- APM View has service level view, resource page, trace level info, error tracking, watchlog insights etc.
+
+
+
+
 Profiling
 ---
 
