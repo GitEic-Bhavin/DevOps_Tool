@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nodejs-service
+spec:
+  selector:
+    app: nodejs-advanced-app-deployment
+  ports:
+    - protocol: TCP
+      port: 3000        # service port (external inside cluster)
+      targetPort: 3000  # matches containerPort of nodejs-app-c
+      # nodePort: 30002
+  type: NodePort        # or LoadBalancer if on cloud
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-service
+spec:
+  selector:
+    app: redis
+  ports:
+    - port: 6379
+      targetPort: 6379
