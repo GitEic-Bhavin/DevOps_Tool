@@ -597,7 +597,7 @@ Conditional Expressions with multiple variables
 
 - If 2 or more conditions are match then, it will use true_value.
 
-```json
+```t
 variable "region" {
     default = "ap-south-2"
 }
