@@ -1,3 +1,11 @@
 AZ-104/Compute_Resources/sensitive/mount-container-fileshare.yml
 AZ-104/Compute_Resources/sensitive/*
 Datadog/Python_Logging/*
+Terraform_clones/
+Terraform-03/github.tf
+Terraform-03/datatypes/.terraform.lock.hcl
+Terraform-03/datatypes/.terraform
+Terraform-03/datatypes/terraform.tfstate*
+Terraform-03/.terraform
+Terraform-03/.terraform.lock.hcl
+Terraform-03/terraform.tfstate*
