@@ -23,7 +23,7 @@ Important Learnings
 
 - To use Provider which is not maintained by HashiCorp, You have to explicit define the source info, using a new syntax in the `required_providers` nested block inside the terraform configurations block.
 
-```json
+```t
 # Default providers
 provider "aws" {
     region = "ap-south-1"
@@ -48,7 +48,7 @@ provider "digitaloceab" {
 
 ##### Example for github providers
 
-```json
+```t
 terraform {
     required_providers {
         github = {
@@ -88,7 +88,7 @@ To use diff version of aws provider and install it
 - You want to use aws provider version of 6.12
 - Make chagne in provider.tf
 
-```json
+```t
 terraform {
     required_providers {
         github = {
@@ -177,7 +177,7 @@ terraform init -upgrade
 Better approach for AWS Authentication for Terraform
 ---
 
-```json
+```t
 provider "aws" {
     access_key = "Your_Key"
     secret_key = "Your_Secrets"
@@ -192,7 +192,7 @@ provider "aws" {
 
 1. Give your creds path
 
-```json
+```t
 provider "aws" {
     shared_config_files = ["/home/user1/.aws/config"]
     shared_credentials_files = ["/home/user1/.aws/creds"]
@@ -208,7 +208,7 @@ Control multiple values with variables
 - create variable.tf 
 - define varialbes like below
 
-```json
+```t
 variable "HTTPS" {
     default = "445"
     description = "Establish ssh"
@@ -217,7 +217,7 @@ variable "HTTPS" {
 
 - Use this varialbes in main config files via use of `var.ssh.port`.
 
-```json
+```t
 resource "aws_vpc_security_group_ingress_rule" "inbound_rule" {
   security_group_id = aws_security_group.my-sg.id
   # cidr_ipv4 = aws_vpc.main.cidr_block
@@ -246,7 +246,7 @@ Which Precedence first ? variable.tf or terraform.tfvars ?
 
 1. If variable.tf and terraform.tfvars has defined variables diff.
 
-```json
+```t
 # variable.tf
 variable "HTTPS_from" {
   default = "22"
@@ -270,7 +270,7 @@ HTTPS_to = 443
 2. If `variable.tf` has defined value and `terraform.tfvars` is empty
 - Alwasy `variable.tf` will take precedence.
 
-```json
+```t
 # variable.tf
 variable "HTTPS_from" {
   default = "22"
@@ -293,7 +293,7 @@ variable "HTTPS_to" {
 
 - It will ask you for enter value.
 
-```json
+```t
 # variable.tf
 variable "HTTPS_from" {
 }
@@ -351,7 +351,7 @@ Data Types
 
 **List Example**
 
-```json
+```t
 variable "listdt" {
   type = list(string)
 }
@@ -377,7 +377,7 @@ Fetching Data from Maps and List in variables
 
 - Refer **key** from that map.
 
-```json
+```t
 resource "aws_instance" "listec2" {
     ami = "ami-02d26659fd82cf299"
     instance_type = var.type_instance["ap-south-1"]
@@ -402,7 +402,7 @@ variable "type_instance" {
 
 - If you want to fetch data from list, use **[index_number]** of list as below
 
-```json
+```t
 resource "aws_instance" "listec2" {
     ami = "ami-02d26659fd82cf299"
     instance_type = var.list_instnace[0]
@@ -413,7 +413,7 @@ Create multiple EC2 by using `count`
 
 - Just use `count=2` , so 2 diff ec2 instance will be created but with same tags and same EC2 instance name.
 
-```json
+```t
 resource "aws_instance" "listec2" {
     ami = "ami-02d26659fd82cf299"
     instance_type = var.type_instance["ap-south-1"]
@@ -540,7 +540,7 @@ Plan: 2 to add, 0 to change, 0 to destroy.
 - So, To create multipl EC2 with Diff name of tags.
 - Use `count.index` , this will create EC21, EC22 by indexing your tags `Name`.
 
-```json
+```t
 resource "aws_instance" "listec2" {
     ami = "ami-02d26659fd82cf299"
     instance_type = var.type_instance["ap-south-1"]
@@ -567,7 +567,7 @@ To create multiple EC2 or IAM User with diff name
 - create variable with list(string) and define all 4 diff users
 - Refer this list variable as var in `aws_iam_user` resouce block.
 
-```json
+```t
 resource "aws_iam_user" "my-user" {
   name = var.iam_user[count.index]
   count = 4
