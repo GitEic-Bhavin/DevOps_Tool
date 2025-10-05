@@ -615,3 +615,397 @@ resource "aws_instance" "mult-var" {
 **OutPut**
 
 ![alt text](multi-var.png)
+
+
+
+Terraform Console (For Functions)
+---
+
+- Go to terraform console
+```bash
+terraform console
+
+>
+```
+
+1. max() - find max values from inputs
+```bash
+max(10,20,30,40)
+
+#OutPut
+> 40
+```
+
+2. file() - Reads the contents of a file at the given path and returns them as a string.
+
+```bash
+> file("input.txt")
+<<EOT
+# OutPut
+input 1
+input 2
+
+EOT
+```
+
+#### Importance of File Functions
+
+  - You have to create and attach your own iam policy to iam user.
+  - Which may be line of 20 or 50 lines.
+  - You terraform code will becom a big and lengthy code.
+
+  - We want to neat and clean code which is understable and made easy to configurations.
+
+  - Instead of creat a new policy , if you have that file in you local or anywhere you can read that file and input it as in command.
+
+![alt text](file-f.png)
+
+
+
+Functions
+---
+
+`lookup()` - retrieves the value of a single element from a map, given its key. If the given key does not exist, the given default value is returned instead.
+
+```bash
+> lookup({a="ay", b="bee"}, "a", "what?")
+ay
+> lookup({a="ay", b="bee"}, "c", "what?")
+what?
+```
+
+`element` retrieves a value from a list given its index.
+
+```bash
+element(list, index)
+
+> element(["a", "b", "c"], 1)
+"b"
+```
+
+`length` - determines the length of a given list, map, or string.
+
+```bash
+> length([])
+0
+> length(["a", "b"])
+2
+> length({"a" = "b"})
+1
+> length("hello")
+5
+
+> length("👾🕹️")
+2
+```
+
+`formatdate` converts a timestamp into a different time format.
+
+```bash
+formatdate(spec, timestamp)
+```
+
+Challenge Functions
+---
+
+```t
+provider "aws" {
+    region = var.region
+}
+
+variable "region" {
+  default = "us-east-1"
+}
+
+variable "tags" {
+  type = list
+  default = ["firstec2", "secondec2"]
+}
+
+variable "ami" {
+  type = map
+  default = {
+    "us-east-1" = "ami-0360c520857e3138f"
+    "us-west-1" = "ami-00271c85bf8a52b84"
+    "ap-south-1" = "ami-02d26659fd82cf299"
+  }
+}
+
+
+
+resource "aws_instance" "app-dev" {
+    ami = lookup(var.ami, var.region)
+    instance_type = "t2.micro"
+    count = length(var.tags)
+
+    tags = {
+        Name = element(var.tags, count.index)
+        CreationDate = formatdate("DD MM YYYY hh::mm:ZZZ",timestamp())
+    }
+}
+```
+
+- `ami` will use of **us-east-1** as input is given as **var.regions**.
+
+`count` has length of 2 **firstec2** and **secondec2** so 2 diff vm will create
+
+In **tags = {}** - `element` is used for Name key. so it will **fetch 2 diff tags as index from list**. and also used count.index to fetch auto index value from tags. so i dont get here will 2 diff tags will use for diff 2 vm or 2 diff tags will use in same vm ?
+
+`element(var.tags, count.index)` → picks one value from the list per instance:
+
+- First instance (count.index = 0) → "firstec2"
+
+- Second instance (count.index = 1) → "secondec2"
+
+- So each VM gets a different Name tag from your var.tags list.
+
+- CreationDate will be same or slightly different depending on execution time.
+
+
+Local Values
+---
+
+**Use Case**
+
+You have lot of variables like ec2 tags, which will use for all 4 ec2.
+You are generally use variable.tf and define all required vars into it.
+
+Whenever you want to use this vars in your config file. you have to declare that vars like `var.instance_type` or `"${var.instance_name}-name-is-${var.tags.default}"`
+
+- You have to declare this type of vars everytime which may be cause to **type error** and made a code lengthy and complex.
+
+- You can use `local values` which is easy way to declare lot of or combination of vars into single value.
+
+- ![alt text](local-v.png)
+
+
+Data Source
+---
+
+- Data sources allow to use / fetch information defined outside of terraform.
+- Ex. Default VPC, local scripts , config files of nginx, secret files of k8s.
+
+Fetch aws ami id for ubuntu in ap-south-1 regions.
+---
+
+```t
+data "aws_ami" "ami" {
+  region = var.Region
+  most_recent = true
+  owners = ["amazon"]
+
+  filter {
+    name   = "name"
+    values = ["ubuntu-pro-minimal/images/hvm-ssd/ubuntu-jammy-amd64-pro-minimal-*"]
+  }
+}
+
+output "ami-id" {
+  value = data.aws_ami.ami.id
+}
+```
+
+**OutPut**
+```bash
+Outputs:
+
+ami-id = "ami-07a1a65fd30536aea"
+```
+
+- Use this ami id as ref to create a new ec2.
+
+```h
+resource "aws_instance" "ref-ami-id" {
+  ami = data.aws_ami.ami.image_id
+  instance_type = "t2.micro"
+}
+```
+
+
+Debugging in terraform
+---
+
+- When you do terraform apply , due to some reason you got a error cause couldn't create a resource.
+- In cli, we use -v to -vvvv for debug.
+- For terraform, we have to enable debug by `export TF_LOG="Log_Level"`, which will gives all details during execution of terraform.
+
+- To save this output in a file and dont want to see all details during execution, just give a file_path, `export TF_LOG_PATH="Your_file_path"`.
+
+```bash
+export TF_LOG=INFO
+
+terraform plan
+```
+
+**OutPut**
+![alt text](debug.png)
+
+- save logs into file
+
+```bash
+export TF_LOG_PATH="terraform-log.txt"
+
+terraform plan
+```
+
+**NOTE**
+- This `TF_LOG` and `TF_LOG_PATH` is just a `temporary solutions` for debugging.
+- Whenever you **`start a new sessions`**, that debugging will **`not work`**, you have to export and set it again everytime.
+
+
+
+Dynamic Block
+---
+
+- If you want to create a security group/ec2 with same configuration but with diff requirememts like diff ports, diff cidr block etc.
+
+- You should use `dynamic block` 
+
+- Suppose you want to make iteration over port for from_port and to_port for list of ports like 8000, 8001 etc.
+
+```h
+variable "sg_ports" {
+    type = list(number)
+    description = "list of ingress ports"
+    default = [ 8200, 8201, 9000, 9200 ]
+}
+
+resource "aws_security_group" "dyn-sg" {
+    name = "Dynamic_SG_TF"
+    
+    dynamic "ingress" {
+        for_each = var.sg_ports
+        content {
+          from_port = ingress.value
+          to_port = ingress.value
+          protocol = "tcp"
+          cidr_blocks = ["0.0.0.0/0"]
+        }
+      
+    }
+}
+```
+
+Taint the resources
+---
+
+- The `-replace` optino with terraform apply to force terraform to replace an object even though there are no configurations changes that would require it.
+
+```h
+terraform apply -replace="aws_instance.web
+```
+
+- This will delete that ec2 then re-create it.
+
+| Approach                              | Usage                                                         | Status          |
+| ------------------------------------- | ------------------------------------------------------------- | --------------- |
+| `terraform taint <resource>`          | Marks resource tainted → needs 2 steps (`taint` then `apply`) | **Deprecated**  |
+| `terraform apply -replace="resource"` | One-step → destroy + recreate that resource during apply      | **Recommended** |
+
+
+Splat Expressions
+---
+
+- Splat Expressions allows us to get a list of all the attributes.
+
+- Splat Expression is indicated by `[*]`.
+
+```h
+resource "aws_iam_user" "iam-u" {
+  count = 3
+  path = "/system/"
+}
+
+output "arns-iam" {
+  value = aws_iam_user.iam-u.[*].arn
+}
+```
+
+**OutPut**
+```bash
+Outputs:
+
+arns-iam = [
+  "arn:aws:iam::*********:user/system/user-0",
+  "arn:aws:iam::*********:user/system/user-1",
+  "arn:aws:iam::*********:user/system/user-2",
+]
+```
+
+Terraform output
+---
+
+- The terraform output command is used to extract the value of an output variable from the state file.
+
+```h
+resource "aws_iam_user" "iam-u" {
+  count = 3
+  path = "/system/"
+  name = 
+}
+
+output "arns-iam" {
+  value = aws_iam_user.iam-u.[*].arn
+}
+```
+
+**OutPut**
+```bash
+arns-iam = [
+  "arn:aws:iam::*********:user/system/user-0",
+  "arn:aws:iam::*********:user/system/user-1",
+  "arn:aws:iam::*********:user/system/user-2",
+```
+
+
+Overview of zipmap functions
+---
+
+- The zipmap function constructs a map from a list of keys and a corresponding list of values.
+
+![alt text](zipmap.png)
+
+```h
+> zipmap(["pineapple", "oranges", "strawberry"], ["yellow", "oragnes", "red"])
+{
+  "oranges" = "oragnes"
+  "pineapple" = "yellow"
+  "strawberry" = "red"
+}
+>  
+```
+
+Terraform Resource behavior and meta arguments
+---
+
+**Terraform Refresh**
+
+- If you had created ec2 via tf and then you create tags for that ec2 like `Name = My-EC2` and `Env = Prod`.
+
+- During next execution of terraform, what will happens ?
+
+- Terraform will refresh those manualy changes.
+- This chagnes is not given in your conf file and doesn't match with `terraform.tfstate` and `terraform.tf` files.
+
+- So, it will delete/remove those changes.
+
+![alt text](r-tags.png)
+
+
+**Now you want to kepp those manually added tags, just want to ignore it**
+
+**add lifecycle block**
+
+```h
+resource "aws_instance" "ec2" {
+  instance_type = "t2.micor"
+  ami = "ami-1234"
+
+  tags = {
+    Name = "My-EC2"
+  }
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
+}
