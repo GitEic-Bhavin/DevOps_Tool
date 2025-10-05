@@ -9,3 +9,6 @@ Terraform-03/datatypes/terraform.tfstate*
 Terraform-03/.terraform
 Terraform-03/.terraform.lock.hcl
 Terraform-03/terraform.tfstate*
+Terraform-03/dynamic-block/terraform.tfstate*
+Terraform-03/dynamic-block/.terraform.lock.hcl
+Terraform-03/dynamic-block/.terraform
