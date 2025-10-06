@@ -583,6 +583,60 @@ variable "iam_user" {
 
 ![alt text](diffname.png)
 
+For_Each Loops
+---
+
+- If a resource block includes a `for_each` meta-arguments whose value is a map or a set of strings, Terraform creates one instance for each memeber of that map or set.
+
+- While you want to keep all things configuration same but only slightly changes with attributes like create multipple users, ec2 with diff name then `for_each` should use.
+
+![alt text](sample-foreach.png)
+
+for_each with Map
+---
+
+```h
+variable "mymap" {
+  type = map
+  default = {
+    dev = "ami-1234"
+    prod = "ami-5678"
+  }
+}
+
+resource "aws_instance" "web" {
+  for_each = var.mymap
+  ami = each.value
+  instance_type = "t3.micor"
+  
+  tags = {
+    Name = each.key # here, `each.key` will read the key from var.mymap as like **dev** and **prod** and add into tags.
+  }
+}
+```
+Map Data Types
+---
+
+
+Object Data Types
+---
+
+- Object is also a collection of key-value pairs, but each value can be of a diff type.
+
+- A proper structure is required while defining object data type.
+
+- You can define diff data types within this Object data types like, `string`, `number` etc.
+
+```h
+variable "my-object" {
+  type = object({Name = string, userID = number})
+}
+```
+
+![alt text](obdt
+.png)
+
+
 Conditional Expressions
 ---
 ```bash
@@ -1009,3 +1063,75 @@ resource "aws_instance" "ec2" {
     ignore_changes = [tags]
   }
 }
+```
+
+Basic of Lifecycle Meta-Arguments
+---
+
+- There are Four argument available within the lifecycle block.
+
+| Arguments | Descriptions |
+| --------- | ------------ |
+| **create_before_destroy** | New replacement object is created first, and the prior object is destroyed after the replacement is created |
+| **prevent_destroy** | Terraform to reject with an error any plan that would destroy the infrastructure object associated with the resource |
+| **ignore_changes** | Ignore certain changes to the live resource that does not match the configurations |
+| **replace_triggered_by** | Replaces the resources when any of the referenced items change |
+
+
+By default, when terraform must changes a resource arguments that can't be updated in-place due to remote API limitations, Terraform will instead destroy the existing object and then create a new replacement object with the new configured arguments.
+
+Explainations
+- When you modify resource on cloud provider portal manually, Terraform will update those changes or destroy and re-create that resources based on what did you changed ?
+
+Ex. Changed instance_type from "t2.micro" to "t3.medium" for scaling. it will updated.
+
+- If you changed its AMI, AWS will not allow to change resource, Terraform will recreate with that new AMI.
+
+
+
+Dependencies
+---
+
+- `depends_on` - meta-arguments instructs terraform to complete all actions on the dependency object befor performing actions on the object declaring the dependency.
+
+```h
+resource "aws_instance" "example" {
+  ami = "ami-1234"
+  instance_type = "t2.medium"
+  depends_on = [aws_s3_bucket.example]
+}
+
+resource "aws_s3_bucket" "example" {
+  bucket = "s3_bucket"
+}
+```
+
+ **case 1** `during executions` - While you make dependency for EC2, It will create first - S3 Bucket and then it will creat EC2.
+ **case 2** `during destroy` - It will reverse order, first delete EC2 then it will delete S3 bucket.
+
+
+
+Implicit vs Explicit Dependencies
+---
+
+`1. explicit dependencies` - are declared using the `depends_on` meta-arguments.
+
+- You use this when there is no direct attribute reference, but you still need to control the order of resource creations.
+
+- Terraform builds a dependency graph before creating resources.
+
+- An implicit dependency means Terraform automatically understands that one resource depends on another without you explicitly telling it.
+
+- This happens whenever you reference attributes of one resource inside another resource.
+
+```h
+resource "aws_vpc" "my_vpc" {
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "aws_subnet" "my_subnet" {
+  vpc_id     = aws_vpc.my_vpc.id   # <-- reference creates implicit dependency
+  cidr_block = "10.0.1.0/24"
+}
+```
+
