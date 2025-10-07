@@ -12,3 +12,8 @@ Terraform-03/terraform.tfstate*
 Terraform-03/dynamic-block/terraform.tfstate*
 Terraform-03/dynamic-block/.terraform.lock.hcl
 Terraform-03/dynamic-block/.terraform
+Terraform-03/Lifecycle_Dep/.terraform*
+Terraform-03/Lifecycle_Dep/terraform.tfstate*
+Terraform-03/Provisioners/.terraform*
+Terraform-03/Provisioners/terraform.tfstate*
+
