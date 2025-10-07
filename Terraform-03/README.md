@@ -1135,3 +1135,100 @@ resource "aws_subnet" "my_subnet" {
 }
 ```
 
+
+Provisioners
+---
+
+- Provisioners are used to **execute script on a local and remote machines** as part of resource creation or destructions.
+
+#### Types of Provisioners
+1. local-exec
+2. remote-exec
+
+1. local-exec - Invokes a local executabble after a resource is created.
+
+Ex. After launched EC2, fetch the IP address and Store it in file server_ip.txt
+
+Ex. Run ansible playbook from local to remote.
+
+![alt text](lexec.png)
+
+2. remote-exec - Invoke script or run commands directly on the remote server
+
+Ex. Establish SSH over EC2.
+
+- Add connection block to define SSH to establish SSH over Server.
+
+- Then write a Remote-Exec block to run multiple commands.
+
+![alt text](rexec.png)
+
+
+
+Basic of Creation-Time Provisioners
+---
+
+- Bydefault, Provisioners run when the resource they are defined within is  created.
+
+- Create-Time Provisioners are **Only run during creations**, not during updating or any other lifecycle.
+
+- The provisioners which is defined within resource block, so while your resource has been created after that your provisioner will runs. That is called **Creation-Time-Provisioners**.
+
+Ex.
+```h
+resource "aws_instance" "life" {
+    ami = "ami-00111452cb3c5dda0"
+    instance_type = "t2.micro"
+
+    provisioner "local-exec" {
+      command = "echo ${self.private_ip} > private_IP.txt"
+    }
+}
+
+output "private_IP" {
+  value = aws_instance.life.private_ip
+}
+```
+
+**If a creation-time provisioners `fails`, the resource is marked as `tainted`**.
+
+![alt text](pfls.png)
+
+At this tijme, Tainted resource will be planned for destroy and recreate during next terraform apply.
+
+If you want to Not Marked Resource as Tainted if Provisioner fails ?
+---
+
+- You can use of **on_failure** settings can be used change the default bahavior.
+
+| **Allowed Values** | Descriptions |
+| ------------------ | ------------ |
+| continue | Ignore the error and continue with creation or destructions |
+| fail (default value) | Raise an error and stop applying. If this is a creation provisioner, taint the resources. Resource will marked as **tainted** .Terraform will stop and **show error**.|
+
+- If provisioner fails , still resource will be created/ignored error
+
+![alt text](add-po.png)
+
+Destroy-Time Provisioners
+---
+
+- Destroy provisioners are run before the resource is destroyed.
+
+Ex. Remove and De-Link Anti-Virus software before EC2 gets Terminated.
+
+```h
+resource "aws_instance" "life" {
+    ami = "ami-00111452cb3c5dda0"
+    instance_type = "t2.micro"
+
+    provisioner "local-exec" {
+        
+        when = destroy
+
+# when = destroy defined , that will run after destroy this resource and print "Destroy-Time Provisioners"
+
+        command = "echo 'Destroy-Time Provisioners'"
+    }
+}
+```
