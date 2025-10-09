@@ -1232,3 +1232,429 @@ resource "aws_instance" "life" {
     }
 }
 ```
+
+Terraform Modules
+---
+
+- **Terraform Modules** allows us to centralize the resource configurations and it makes it easier for multiple projects to re-use the terraform code.
+
+```bash
+$ tree .
+.
+├── main.tf # master file where modules are call.
+├── modules
+│   ├── RDS
+│   │   ├── main.tf
+│   │   └── variable.tf
+│   ├── SG
+│   │   ├── main.tf
+│   │   ├── output.tf
+│   │   └── variable.tf
+│   └── vpc
+│       └── main.tf
+├── terraform.tfstate
+└── terraform.tfstate.backup
+```
+
+Call Modules Methods
+---
+
+1. Local module call
+
+- Call module in Root file `main.tf`.
+```h
+// main.tf
+
+module "security-group" {
+  source = "./modules/SG"
+
+}
+
+
+```
+
+2. Git Repository
+
+- Your terraform code and modules are on git repo, you can use your git repo with prefix `git::`.
+
+![alt text](git-module.png)
+
+3. S3 Bucket URL
+
+- Use prefix `s3::<Your_S3_URL>`
+
+```h
+
+module "security-group" {
+  source = "s3::<Your_S3_URL>"
+
+}
+```
+
+Module Versions
+---
+
+- A specific module can have multiple versions.
+- You can reference to specific version of module with the `version` block.
+
+![alt text](m-v.png)
+
+Root Modules vs Child Modules
+---
+
+- `Root Module` resides in the **main working dir** of you terraform configurations.
+
+```h
+module "ec2" {
+  source = "./modules/ec2"
+}
+```
+
+- `Child Moudule` - A module that has been called by another module is called child modules.
+
+```bash
+modules > ec2
+        > sg
+
+# ec2 and sg is a child modules where actual code is written for specific resource.
+
+# this ec2 and sg moudules will be called by root module in root dir main.tf
+```
+
+Explicitly define Provider and Multiple Providers
+---
+
+# Passing Provider Explicitly in Terraform
+
+In Terraform, if you have multiple providers or aliased providers, you sometimes need to tell a resource or module exactly which provider to use.
+
+Ex. Your plan to provision complex infrastructure where diff cloud providers like aws, azure should requiredl.
+
+also your resources required in diff regions like azure storage GenV2 for CORS requird diff regions.
+
+You need to defined provider as explicitly with multiple providers for diff regeions.
+---
+
+## 1. Default Provider (No Need to Pass)
+
+```hcl
+provider "aws" {
+  region = "us-east-1"
+}
+
+resource "aws_instance" "default" {
+  ami           = "ami-123456"
+  instance_type = "t2.micro"
+}
+```
+
+## 2. Multiple Providers with Alias for diff regions.
+
+```hcl
+provider "aws" {
+  region = "us-east-1"
+}
+
+provider "aws" {
+  alias  = "west"
+  region = "us-west-2"
+}
+
+resource "aws_instance" "east" {
+  provider      = aws
+  ami           = "ami-123456"
+  instance_type = "t2.micro"
+}
+
+resource "aws_instance" "west" {
+  provider      = aws.west
+  ami           = "ami-654321"
+  instance_type = "t2.micro"
+}
+```
+
+## 3. Passing Provider Explicitly to a Module
+
+- When using modules, you must pass provider Explicitly to use and pass diff regions rather than default.
+
+```hcl
+module "ec2_module" {
+  source = "./modules/ec2"
+
+  providers = {
+    aws = aws.west
+  }
+}
+```
+
+## 4. Your Child modules will use explicit providers for diff regions from Root Modules.
+
+- Inside modules/ec2/main.tf, you just define resources normally:
+
+```hcl
+resource "aws_instance" "myec2" {
+  ami           = "ami-987654"
+  instance_type = "t2.micro"
+}
+```
+👉 The module will now use aws.west provider.
+
+✅ Summary
+
+- provider = aws → uses default
+
+- provider = aws.alias → uses specific alias
+
+- providers = { aws = aws.alias } → pass explicitly into a module.
+
+
+
+
+
+
+
+Terraform Workspace
+---
+
+terraform workspace commands
+
+```bash
+    delete    Delete a workspace
+    list      List Workspaces
+    new       Create a new workspace
+    select    Select a workspace
+    show      Show the name of the current workspace
+```
+
+- While you creat a new workspace like dev, prod, it will create a new dir named **terraform.tfstate.d** which will contains your all workspace with its **terraform.tfstate** files.
+
+**Use Case**
+
+- You want to create EC2 instance with diff Instance_type as per workspace changes.
+- Ex. If workspace is prod = Instance_type -- "t3.medium",
+      If workspace is dev = Instance_type = "t2.micro"
+
+
+1. Create local value to group this Instance_type values.
+
+```h
+local {
+  instance_type = {
+    prod = "t3.medium
+    dev = "t2.micro"
+  }
+}
+```
+2. Use this local values into resource block with terraform workspace.
+
+```h
+resource "aws_instance" "ec2-ws" {
+  ami = "ami-1234"
+  instance_type = local.instance_type[terraform.workspace]
+}
+```
+
+Setting the Terraform Backend
+---
+
+- Store your **terraform.tfstate** securly on backend to work with diff teams together.
+
+- Terraform backend use like, AWS S3 Bucket, consule, postgresdb etc.
+
+State Lock
+---
+
+- **State Locking** is a mechanism that prevent s multiple operations from making concurrent changes to your infrastructure state file.
+
+- By state locking only one process , operations can make chagnes at a time.
+
+**Process of state locking**
+
+1. Before performing any write operations, Terraform attempts to acquire a "lock" on the state file.
+
+2. If the lock is successfully applied, Terraform proceeds with the ops.
+
+3. Once the ops is completed, Terraform will release the lock, all allowing other processes to acquire it.
+
+- When a state lock is held, any attempt by other users will fails with an error **"Error acquiring the state lock"**.
+
+- While a process or operation is being initialized by user , the new file **terraform.tfstate.lock.info** will create , after completed ops this file will removed automatically.
+
+
+
+# Terraform Partial Backend Configuration Guide
+
+This repository contains a **step-by-step guide** on using **partial backend configuration** in Terraform. Partial configuration allows you to omit certain backend arguments from the `backend` block and provide them later during `terraform init`. This is useful in multi-environment setups and CI/CD pipelines.
+
+---
+
+## 📖 Overview
+
+* **Full backend config**: All arguments are declared in the Terraform code.
+* **Partial backend config**: Some arguments are omitted in code and must be supplied interactively or via CLI flags/config files.
+* Helps **separate environment-specific details** from the main configuration and keeps **sensitive values out of source control**.
+
+---
+
+## 🔹 Examples
+
+### Full S3 backend config
+
+```hcl
+terraform {
+  backend "s3" {
+    bucket = "my-terraform-states"
+    key    = "prod/app.tfstate"
+    region = "ap-south-1"
+  }
+}
+```
+
+### Partial S3 backend config
+
+```hcl
+terraform {
+  backend "s3" {
+    bucket = "my-terraform-states"
+  }
+}
+```
+
+Missing values (`key`, `region`) must be provided during init.
+
+---
+
+## 🔹 Initialize with Partial Config
+
+### Interactive init
+
+```bash
+terraform init
+```
+
+Terraform prompts for missing arguments.
+
+### Non-interactive (CI/CD)
+
+```bash
+terraform init \
+  -backend-config="key=envs/prod/app.tfstate" \
+  -backend-config="region=ap-south-1"
+```
+
+### Backend config file
+
+`backend-prod.conf`:
+
+```
+key=envs/prod/app.tfstate
+region=ap-south-1
+```
+
+Run:
+
+```bash
+terraform init -backend-config=backend-prod.conf
+```
+---
+
+## 🔹 Best Practices
+
+* **Never commit secrets** into the backend block.
+* Use **environment variables** or secret managers for credentials.
+* Use **state locking** (e.g., DynamoDB with S3 backend).
+* **Backup state files** before changing/migrating backends.
+* Treat `.tfstate` files as **sensitive data**.
+
+---
+
+## 🔹 Useful Commands
+
+```bash
+# Initialize (prompt for missing args)
+terraform init
+
+# Provide backend config inline
+terraform init -backend-config="key=envs/prod/app.tfstate" -backend-config="region=ap-south-1"
+
+# Use backend config file
+terraform init -backend-config=backend-prod.conf
+
+# Reinitialize backend
+terraform init -reconfigure
+```
+
+
+
+
+Terraform state management
+---
+- In some cases, we have to modify `terrform.tfstate` file manually which is **NOT** Recommended.
+
+```bash
+terraform state <sub-commands>
+```
+
+![alt text](tfm.png)
+
+```bash
+terraform list
+
+# Show all resources in state file
+```
+![alt text](list.png)
+
+
+**To show specific resource**
+
+```bash
+terraform state show module.aws_eip.eip
+```
+
+![alt text](show.png)
+
+**To pull the state from a remote backend**
+
+```bash
+terraform state pull
+```
+
+**To remove items from state file**
+
+```bash
+terraform state rm module.eip.aws_eip.eip
+```
+
+- If any resources are modified a lot of times manually, so that resource will be deficult to manage by you and terraform.
+- You can remove resource from `tfstate` file.
+
+- But **It will not destroy and will be keep in AWS**
+
+- After remove it, It will no longer to track in every plan and apply.
+
+- But **If that removed resource, that is still exists in your configuration files. At next plan , apply terraform will see it as new resource and will try to create it**.
+
+- It will not track that resource once it removed from **tfstate** file.
+- You will se No Changes.
+
+**ignore_changes = true**
+- This will ignore that resource even it had changed a lot of time.
+- But, it will not remove the resources from **tfstate** file and will be tracking that resources and managing by terraform.
+
+**Remove eip from state**
+
+![alt text](rm.png)
+
+**List all resources to confirm its removed**
+
+![alt text](rlist.png)
+
+**Rename resource without destroy it**
+
+```bash
+terraform state mv module.eip.aws_eip.eip module.eip.aws_eip.dev_eip
+```
+
+![alt text](mv.png)
+
+
