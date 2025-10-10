@@ -22,9 +22,9 @@ module "security-group" {
 #   }
 # }
 
-providers = {
-  aws.mumbai = aws.mumbai
-  }
+  providers = {
+    aws.mumbai = aws.mumbai
+    }
 }
 
 module "default-vpc" {
