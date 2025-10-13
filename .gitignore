@@ -16,4 +16,17 @@ Terraform-03/Lifecycle_Dep/.terraform*
 Terraform-03/Lifecycle_Dep/terraform.tfstate*
 Terraform-03/Provisioners/.terraform*
 Terraform-03/Provisioners/terraform.tfstate*
+Terraform-03/Modules_WorkSpace/Module_team/.terraform*
+Terraform-03/Modules_WorkSpace/Module_team/terraform.tfstate*
+Terraform-03/Modules_WorkSpace/Module_team/A
+Terraform-03/Modules_WorkSpace/Module_team/B
+Terraform-03/Modules_WorkSpace/Workspace/terraform.tfstate*
+Terraform-03/Modules_WorkSpace/Workspace/.terraform*
+Terraform-03/BackEnd/Datasource/Security_Team/.terraform*
+Terraform-03/BackEnd/Datasource/Security_Team/terraform.tfstate*
+Terraform-03/BackEnd/Datasource/Networking_Team/.terraform*
+Terraform-03/Import/.terraform*
+Terraform-03/Import/terraform.tfstate*
+Terraform-03/Security_Primer/Sensitive/terraform.tfstate*
+/Terraform-03/Security_Primer/Sensitive/.terraform*
 
