@@ -40,3 +40,6 @@ Terraform-03/Challenges/1/terraform.tfstate*
 Terraform-03/Challenges/4/terraform.tfstate*
 Terraform-03/Challenges/4/.terraform*
 Terraform-03/terraform.tfstate*
+Terraform-03/dynamic-block/jsonvars/.terraform*
+Terraform-03/dynamic-block/jsonvars/terraform.tfstate*
+Terraform-03/Challenges/.terraform*
