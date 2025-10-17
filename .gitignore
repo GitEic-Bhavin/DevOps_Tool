@@ -6,7 +6,7 @@ Terraform-03/github.tf
 Terraform-03/datatypes/.terraform.lock.hcl
 Terraform-03/datatypes/.terraform
 Terraform-03/datatypes/terraform.tfstate*
-Terraform-03/.terraform
+Terraform-03/.terraform*
 Terraform-03/.terraform.lock.hcl
 Terraform-03/terraform.tfstate*
 Terraform-03/dynamic-block/terraform.tfstate*
@@ -28,5 +28,15 @@ Terraform-03/BackEnd/Datasource/Networking_Team/.terraform*
 Terraform-03/Import/.terraform*
 Terraform-03/Import/terraform.tfstate*
 Terraform-03/Security_Primer/Sensitive/terraform.tfstate*
-/Terraform-03/Security_Primer/Sensitive/.terraform*
-
+Terraform-03/Security_Primer/Sensitive/.terraform*
+Terraform-03/dynamic-block/jsonvars/.terraform*
+Terraform-03/dynamic-block/jsonvars/terraform.tfstate*
+Terraform-03/Challenges/3/.terraform*
+Terraform-03/Challenges/3/terraform.tfstate*
+Terraform-03/Challenges/2/terraform.tfstate*
+Terraform-03/Challenges/2/.terraform*
+Terraform-03/Challenges/1/.terraform*
+Terraform-03/Challenges/1/terraform.tfstate*
+Terraform-03/Challenges/4/terraform.tfstate*
+Terraform-03/Challenges/4/.terraform*
+Terraform-03/terraform.tfstate*
