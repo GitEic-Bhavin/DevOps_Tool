@@ -714,3 +714,141 @@ resource "aws_instance" "example" {
   }
 }
 ```
+
+**Q-58 How is the Terraform remote backend different than other state backends such as S3, Consul, etc.?**
+A
+It can execute Terraform runs on dedicated infrastructure on premises or in Terraform Cloud
+B
+It doesn't show the output of a terraform apply locally
+C
+It is only available to paying customers
+D
+All of the above
+
+Ans. **A. It can execute terraform runs on dedicated infrastructure on premises or in terraform cloud.**
+
+Terraform workspaces is defined by **remote** and use your **org name used in your HCP account**.
+
+```h
+terraform {
+  backend "remote" {
+    organization = "example_corp"
+
+    workspaces {
+      name = "my-app-prod"
+    }
+  }
+}
+```
+
+**Q-59 One remote backend configuration always maps to a single remote workspace. ?**
+TRUE or False ?
+
+Ans. **TRUE**
+
+![alt text](59.png)
+
+![tf backend](https://developer.hashicorp.com/terraform/language/backend)
+
+**Q-60 The terraform.tfstate file always matches your currently built infrastructure.?**
+TRUE or FALSE
+
+Ans. **TRUE**
+
+**Q-61 You run a local-exec provisioner in a null resource called null_resource.run_script and realize that you need to rerun the script. Which of the following commands would you use first ?**
+A
+terraform taint null_resource.run_script
+B
+terraform apply -target=null_resource.run_script
+C
+terraform validate null_resource.run_script
+D
+terraform plan -target=null_resource.run_script
+
+Ans. **A. ```terraform taint null_resource.run_script```**.
+
+**Q-62 Which provisioner invokes a process on the resource created by Terraform?**
+A
+remote-exec
+B
+null-exec
+C
+local-exec
+D
+file
+
+Ans. **A. remote-exec**.
+
+**Q-63 Which of the following is not true of Terraform providers?**
+A
+Providers can be written by individuals
+B
+Providers can be maintained by a community of users
+C
+Some providers are maintained by HashiCorp
+D
+Major cloud vendors and non-cloud vendors can write, maintain, or collaborate on Terraform providers
+E
+None of the above
+
+Ans. **E. None of the above**.
+
+**Q-64 You have deployed a new webapp with a public IP address on a cloud provider. However, you did not create any outputs for your code.**
+What is the best method to quickly find the IP address of the resource you deployed?
+A
+Run terraform output ip_address to view the result
+B
+In a new folder, use the terraform_remote_state data source to load in the state file, then write an output for each resource that you find the state file
+C
+Run terraform state list to find the name of the resource, then terraform state show to find the attributes including public IP address
+Most Voted
+D
+Run terraform destroy then terraform apply and look for the IP address in stdout
+
+Ans . **C `Run terraform state list to find the name of the resource, then terraform state show to find the attributes including public IP address`**.
+
+**Q-65 What is not processed when running a terraform refresh?**
+A
+State file
+B
+Configuration file
+C
+Credentials
+D
+Cloud provider
+
+Ans. **B Configuration file**.
+
+**Q-66 Which of the following is not a valid string function in Terraform?**
+A
+split
+B
+join
+C
+slice
+D
+chomp
+
+Ans. **C - Slice**. Slice is only for list.
+
+| Function      | Purpose                                                   | Valid?                     |
+| ------------- | --------------------------------------------------------- | -------------------------- |
+| **`split()`** | Splits a string into a list using a delimiter             | ✅                          |
+| **`join()`**  | Joins a list of strings into one string using a delimiter | ✅                          |
+| **`chomp()`** | Removes trailing newline characters from a string         | ✅                          |
+| **`slice()`** | Used for **lists**, not **strings**                       | 🚫 (Not a string function) |
+
+**Q-67 You have provisioned some virtual machines (VMs) on Google Cloud Platform (GCP) using the gcloud command line tool. However, you are standardizing with Terraform and want to manage these VMs using Terraform instead.**
+What are the two things you must do to achieve this? (Choose two.)
+A
+Provision new VMs using Terraform with the same VM names
+B
+Use the terraform import command for the existing VMs
+C
+Write Terraform configuration for the existing VMs
+D
+Run the terraform import-gcp command
+
+Ans. **B, C**.
+
+**Q-68
