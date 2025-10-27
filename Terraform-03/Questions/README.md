@@ -748,7 +748,7 @@ Ans. **TRUE**
 
 ![alt text](59.png)
 
-![tf backend](https://developer.hashicorp.com/terraform/language/backend)
+[tf backend](https://developer.hashicorp.com/terraform/language/backend)
 
 **Q-60 The terraform.tfstate file always matches your currently built infrastructure.?**
 TRUE or FALSE
@@ -1052,7 +1052,7 @@ B.in a local file under a directory named terraform/vault-aws-tgw/hcp
 C.a local code repository on your network
 D.the Terraform public registry
 
-- Ans. **D. zzzzzzzzzyhe terraform public registry**
+- Ans. **D. the terraform public registry**
 
 | Option                                      | Why It’s Incorrect                                                                   |
 | ------------------------------------------- | ------------------------------------------------------------------------------------ |
