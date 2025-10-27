@@ -851,4 +851,540 @@ Run the terraform import-gcp command
 
 Ans. **B, C**.
 
-**Q-68
+**Q-68 All Terraform Cloud tiers support team management and governance ?**
+A
+True
+B
+False
+
+Ans. **B `False`**.
+
+Only **Paid Tiers** like `Plus`, `Business` and `Enterprise` tiers are supports for team management and governance like sentinel in HCP Cloud.
+
+**Q-69 You have modified your Terraform configuration to fix a typo in the Terraform ID of a resource from aws_security_group.htp to aws_security_group.http ?**
+
+![alt text](typo.png)
+
+Which of the following commands would you run to update the ID in state without destroying the resource?
+A
+terraform mv aws_security_group.htp aws_security_group.http
+B
+terraform apply
+C
+terraform refresh
+
+Ans. **A. terraform mv**
+
+**Q-70 You are creating a Terraform configuration which needs to make use of multiple providers, one for AWS and one for Datadog.**
+Which of the following provider blocks would allow you to do this ?
+
+A. ![alt text](a.png)
+B. ![alt text](b.png)
+C. ![alt text](c.png)
+
+Ans. **B**. C, Indentations is wrong. A, `you can wrire multiple providers **within terraform { required_provider }**` block Only. 
+
+```h
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~> 3.0"
+    }
+  }
+}
+
+# You have to define provider block to give access and secret key
+
+# AWS Provider
+provider "aws" {
+  region = "us-east-1"
+}
+
+# Azure Provider
+provider "azurerm" {
+  features {}
+  subscription_id = "xxxxxx"
+  tenant_id       = "xxxxxx"
+}
+```
+
+**Q-71 Terraform variable names are saved in the state file. ?**
+
+Ans. **False**. 
+
+- It does not store the variable name (var.instance_type) itself.
+- It stores resource details and varibles values.
+
+**Q-72 Which of the following is not an advantage of using infrastructure as code operations ?**
+A
+Self-service infrastructure deployment
+B
+Troubleshoot via a Linux diff command
+C
+Public cloud console configuration workflows
+D
+Modify a count parameter to scale resources
+E
+API driven workflows
+
+Ans. `C. Public cloud console configuration workflows`.
+
+**Q-73 What does Terraform use providers for? (Choose three.)**
+A
+Provision resources for on-premises infrastructure services
+B
+Simplify API interactions
+C
+Provision resources for public cloud infrastructure services
+D
+Enforce security and compliance policies
+E
+Group a collection of Terraform configuration files that map to a single state file
+
+Ans. **A, B, C**
+
+**Q-74 You can reference a resource created with for_each using a Splat (*) expression.**
+A
+True
+B
+False
+
+Ans. `B False`. We can't use * splat directly.
+- Bcz, For_each has map values , map can't use * Splat.
+- For that we have to use `values()` to convert map to list. then we can use it.
+
+- `values(aws_instance.server)[*].private_ip`.
+
+**Q-75 How does Terraform determine dependencies between resources ?**
+A
+Terraform automatically builds a resource graph based on resources, provisioners, special meta-parameters, and the state file, if present.
+B
+Terraform requires all dependencies between resources to be specified using the depends_on parameter
+C
+Terraform requires resources in a configuration to be listed in the order they will be created to determine dependencies
+D
+Terraform requires resource dependencies to be defined as modules and sourced in order
+
+Ans. `A. Terraform automatically builds a resource graph based on resources, provisioners, special meta-parameters, and the state file, if present.`
+
+**Q-76 Which parameters does terraform import require? (Choose two.)**
+A
+Path
+B
+Provider
+C
+Resource ID
+D
+Resource address
+
+Ans. **C, D**.
+
+```bash
+terraform import <RESOURCE_ADDRESS> <RESOURCE_ID>
+```
+
+**Q-77 Which of the following is true about terraform apply? (Choose two.)**
+A
+It only operates on infrastructure defined in the current working directory or workspace
+B
+You must pass the output of a terraform plan command to it
+C
+Depending on provider specification, Terraform may need to destroy and recreate your infrastructure resources
+D
+By default, it does not refresh your state file to reflect current infrastructure configuration
+E
+You cannot target specific resources for the operation
+
+Ans. **A, C**
+
+**Q-78 Which of the following statements about local modules is incorrect ?**
+A
+Local modules are not cached by terraform init command
+B
+Local modules are sourced from a directory on disk
+C
+Local modules support versions
+D
+All of the above (all statements above are incorrect)
+E
+None of the above (all statements above are correct)
+
+Ans. **C Local modules support versions**
+
+**Q-79 Your team is developing a reusable Terraform module for web servers that must deploy exactly two instances, and you need to enforce this during the plan and apply phase.**
+
+- Which of the following approaches guarantees this validation?
+
+- Ans. `Add a validation block that checks the variable equals 2 and provides an error message if it does not.`
+
+```h
+variable "instance_count" {
+  type = number
+  description = "Number of web server instances to deploy."
+
+  validation {
+    condition     = var.instance_count == 2
+    error_message = "Exactly two instances must be deployed. Please set instance_count = 2."
+  }
+}
+```
+
+**Q-80 You are performing a code review of a colleague's Terraform code and see the following code. Where is this module stored ?**
+
+```h
+module "vault-aws-tgw" {
+  source  = "terraform/vault-aws-tgw/hcp"
+  version = "1.0.0"
+  
+  client_id      = "4djlsn29sdnjk2btk"
+  hvn_id         = "a4c9357ead4de"
+  route_table_id = "rtb-a221958bc5892eade331"
+}
+```
+
+A. in an HCP Terraform private registry
+B.in a local file under a directory named terraform/vault-aws-tgw/hcp
+C.a local code repository on your network
+D.the Terraform public registry
+
+- Ans. **D. zzzzzzzzzyhe terraform public registry**
+
+| Option                                      | Why It’s Incorrect                                                                   |
+| ------------------------------------------- | ------------------------------------------------------------------------------------ |
+| **A. in an HCP Terraform private registry** | Would require prefix like `app.terraform.io/<org>/<module>/<provider>`               |
+| **B. in a local file**                      | A local module would use a relative path: `source = "./terraform/vault-aws-tgw/hcp"` |
+| **C. a local code repository**              | Would use a VCS URL, e.g. `source = "git::https://github.com/org/repo.git"`          |
+| **D. the Terraform public registry**        | ✅ Correct — because no hostname prefix is given.                                     |
+
+
+**Q-81 When you add a new module to a configuration, Terraform must download it before it can be used. What two commands can be used to download and update modules? (select two)**
+
+A. terraform get
+B. terraform init
+C. terraform plan
+D. terraform plan -refresh-only
+
+- Ans. **A `terraform get`**.
+
+- This command is used to download and update modules for a Terraform configuration. It can be used to update specific modules by specifying the module name and version number, or it can be used to update all modules by simply running the command without any arguments.
+
+**Q-82 You are using an HCP Terraform workspace linked to a GitHub repo to manage production workloads in your environment. After approving a merge request, what default action can you expect to be triggered on the workspace ?**
+
+A. The workspace will trigger a set of tests, such as terratest and terraform validate, to ensure the code is valid and can be successfully executed by the specific version of Terraform configured for the workspace.
+B. A speculative plan will be run to show the potential changes to the managed environment and validate the changes against any applicable Sentinel policies
+C. HCP Terraform will automatically execute a terraform destroy operation on your production workloads, and apply the new committed code stored in the GitHub repo
+D. The workspace will run a speculative plan and automatically apply the changes without any required interaction from the user.
+
+
+- Ans. `D. The workspace will run a speculative plan and automatically apply the changes without any required interaction from the user`.
+
+**speculative plan = `New Plans`**.
+
+- `After approving a merge request, HCP Terraform will run a speculative plan to show the potential changes that will be applied to the managed environment. This allows users to review and validate the changes against any applicable Sentinel policies before applying them.`
+
+**Q-83 True or False? Using the latest versions of Terraform, terraform init cannot automatically download community providers.**
+
+- Ans - `False`.
+
+**Q-84 What are some of the requirements that must be met in order to publish a module on the Terraform Public Registry ? (select three)**
+
+A. Module repositories must use this three-part name format, terraform-<PROVIDER>-<NAME>.
+
+A. The registry uses tags to identify module versions. Release tag names must be for the format x.y.z, and can optionally be prefixed with a v .
+
+C. The module must be PCI/HIPAA compliant.
+
+D. The module must be on GitHub and must be a public repo.
+
+- Ans. `Module repositories must use this three-part name format, terraform-<PROVIDER>-<NAME>.`
+
+- `The registry uses tags to identify module versions. Release tag names must be for the format x.y.z, and can optionally be prefixed with a v.`
+
+- `The module must be on GitHub and must be a public repo.`
+
+**Q-85 In order to reduce the time it takes to provision resources, Terraform uses parallelism. By default, how many resources will Terraform provision concurrently during a terraform apply ?**
+
+- Ans. `10`.
+
+**Q-86 Where does Terraform Community (Free) store the local state for workspaces ?**
+
+- Ans. `Default Workspace`: terraform.tfstate (in the root configuration directory)
+
+- `Named Workspaces (e.g., dev)`: terraform.tfstate.d/dev.tfstate (within the root configuration directory)
+
+
+
+**Q-87 In the following code snippet, the type of Terraform block is identified by which string ?**
+
+```h
+resource "aws_instance" "db" {
+  ami           = "ami-123456"
+  instance_type = "t2.micro"
+}
+```
+
+A. t2.micro
+B. resource
+C. db
+D. instance_type
+
+- Ans. `resource`: The block type. This tells Terraform what kind of declaration it is.
+
+- "aws_instance": The resource type (the kind of object to create).
+
+- "db": The local name (how you refer to this specific instance in your code).
+
+**Q-88 A "backend" in Terraform determines how state is loaded and how an operation such as apply is executed. Which of the following is not a supported backend type ?**
+
+A. github
+
+B. s3
+
+C. consul
+
+D. local
+
+Am=ns. `a. github`.
+
+**Q-89 Why is it a good idea to declare the required version of a provider in a Terraform configuration file ?**
+
+```h
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+      version = "3.57.0"
+    }
+  }
+}
+```
+
+A. to match the version number of your application being deployed via Terraform
+B. providers are released on a separate schedule from Terraform itself; therefore, a newer version could introduce breaking changes
+C. to remove older versions of the provider
+D. to ensure that the provider version matches the version of Terraform you are using
+
+Ans. `B. providers are released on a separate schedule from Terraform itself; therefore, a newer version could introduce breaking changes`.
+
+**Q-90 In the example below, where is the value of the DNS record's IP address originating from ?**
+
+```h
+resource "aws_route53_record" "www" {
+  zone_id = aws_route53_zone.primary.zone_id
+  name    = "www.helloworld.com"
+  type    = "A"
+  ttl     = "300"
+  records = [module.web_server.instance_ip_addr]
+}
+```
+
+A. the output of a module named web_server
+B. by querying the AWS EC2 API to retrieve the IP address
+C. the regular expression named module.web_server
+D. value of the web_server parameter from the variables.tf file
+
+- Ans. `A. the output of a module named web_server`.
+
+- `The records attribute in the aws_route53_record resource is being populated with the IP address obtained from the output of the web_server module, allowing the DNS record to point to the correct IP address.`
+
+**Q-91 After executing a terraform plan, you notice that a resource has a tilde (~) next to it. What does this mean ?**
+
+A. the resource will be destroyed and recreated
+B. the resource will be updated in place
+C. Terraform can't determine how to proceed due to a problem with the state file
+D. the resource will be created
+
+- Ans. `B. the resource will be updated in place`.
+
+**Q-92 Which of the following best describes a Terraform provider ?**
+
+A. serves as a parameter for a Terraform module that allows a module to be customized
+B. describes an infrastructure object, such as a virtual network, compute instance, or other components
+C. a container for multiple resources that are used together
+D. a plugin that Terraform uses to translate the API interactions with the service or provider
+
+- Ans. `D. a plugin that Terraform uses to translate the API interactions with the service or provider`.
+
+**Q-93 True or False? Workspaces provide similar functionality in the Community and HCP Terraform versions of Terraform.**
+
+- Ans. `False`.
+- **False. HCP Terraform workspaces act more like completely separate working directories.**
+
+**Q-94 Terry is using a module to deploy some EC2 instances on AWS for a new project. He is viewing the code that is calling the module for deployment, which is shown below. Where does the value of the security group originate ?**
+
+```h
+module "ec2_instances" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "4.3.0"
+ 
+  name           = "my-ec2-cluster"
+  instance_count = 2
+ 
+  ami                    = "ami-0c5204531f799e0c6"
+  instance_type          = "t2.micro"
+  vpc_security_group_ids = [module.vpc.default_security_group_id]
+  subnet_id              = module.vpc.public_subnets[0]
+ 
+  tag = {
+    Terraform   = "true"
+    Environment = "dev"
+  }
+```
+
+A. the Terraform public registry
+
+Explanation
+The value of the security group does not originate from the Terraform public registry. The Terraform public registry is a repository of modules and providers that can be used in Terraform configurations, but it does not provide specific resource values like security group IDs.
+
+B. an environment variable being used during a terraform apply
+
+`C. the output of another module`.
+
+Explanation
+The value of the security group originates from the output of another module, specifically the default_security_group_id output of the vpc module. This allows for the reuse of existing resources and promotes modularity in Terraform code.
+
+D. from a variable likely declared in a .tfvars file being passed to another module
+
+**Q-95 In order to check the current version of Terraform you have installed, you can use the command __ ?**
+
+A. `terraform -v`
+B. `terraform -version`
+C. `terraform version`
+
+- Ans. `terraform version` bcz, this is officially recommended by terraform.
+
+**Q-96 In order to make a Terraform configuration file dynamic and/or reusable, static values should be converted to use what ?**
+
+A. module
+B. output value
+C. input variables
+D. regular expressions
+
+- Ans. **`input vairalbes`**.
+
+- `NOTE`: `Regular expressions are used for pattern matching and manipulation of strings, but they are not directly related to making Terraform configuration files dynamic or reusable`.
+
+**Q-97 When configuring a remote backend in Terraform, it might be a good idea to purposely omit some of the required arguments to ensure secrets and other relevant data are not inadvertently shared with others. What alternatives are available to provide the remaining values to Terraform to initialize and communicate with the remote backend ? (select three)**
+
+A. using a TFVARS file that is committed to a Git repository
+B. directly querying HashiCorp Vault for the secrets
+C. use the -backend-config=PATH flag to specify a separate config file
+D. interactively on the command line
+
+- Ans. **B, C, D**.
+
+`B. directly querying HashiCorp Vault for the secrets`
+
+```bash
+export AWS_ACCESS_KEY_ID=$(vault kv get -field=access_key secret/aws)
+export AWS_SECRET_ACCESS_KEY=$(vault kv get -field=secret_key secret/aws)
+terraform init
+```
+
+`C. use the -backend-config=PATH flag to specify a separate config file`
+
+```h
+bucket = "my-terraform-state"
+key    = "prod/terraform.tfstate"
+region = "us-east-1"
+access_key = "AKIA...."
+secret_key = "abcd...."
+```
+
+- Initialize terraform with -backend-config
+```bash
+terraform init -backend-config=backend.conf
+
+terraform init -backend-config=backend.conf -backend-config=backend-secrets.conf
+```
+
+`D. interactively on the command line`.
+```bash
+Access key for AWS: 
+Secret key for AWS:
+```
+
+**Q-98 In HCP Terraform, a workspace can be mapped to how many VCS repos ?**
+
+- Ans. `1`.
+
+**Q-99 What is the downside to using Terraform to interact with sensitive data, such as reading secrets from Vault ?**
+
+A. Terraform and Vault must be running on the same physical host
+B. secrets are persisted to the state file
+C. Terraform and Vault must be running on the same version
+D. Terraform requires a unique auth method to work with Vault
+
+**Q-100 HCP Terraform can be managed from the CLI but requires __________?**
+When using variables in HCP Terraform, what level of scope
+A. a TOTP token
+B. authentication using MFA
+C. a username and password
+`D. an API token`
+
+**Q-101 What happens when a terraform apply command is executed ?**
+
+A. creates the execution plan for the deployment of resources
+B. applies the changes required in the target infrastructure in order to reach the desired configuration
+C. reconciles the state Terraform knows about with the real-world infrastructure
+D. the backend is initialized and the working directory is prepped
+
+**Q-102 You found a module on the Terraform Registry that will provision the resources you need. What information can you find on the Terraform Registry to help you quickly use this module? (select three)**
+
+A. A Download button to Quickly Get the Module Code
+B. Dependencies to use the Module
+C. Required Input Variables
+D. A list of Outputs
+
+- Ans. **B, C, D**
+
+- `A. A Download button to quickly get the module code ❌`
+
+- **The Terraform Registry does not provide a "Download" button.**
+
+- `Instead, you include the module using its source in your .tf file:`
+
+```h
+module "vpc" {
+  source  = "terraform-aws-modules/vpc/aws"
+  version = "5.0.0"
+}
+```
+
+**Q-103 You want to start managing resources that were not originally provisioned through infrastructure as code. Before you can import the resource's current state, what must you do before running the terraform import command ?**
+
+A. modify the Terraform state file to add the new resources so Terraform will have a record of the resources to be managed
+B. update the Terraform configuration file to include the new resources that match the resources you want to import
+C. run terraform apply -refresh-only to ensure that the state file has the latest information for existing resources.
+D. shut down or stop using the resources being imported so no changes are inadvertently missed
+
+- Ans. `B. update the Terraform configuration file to include the new resources that match the resources you want to import`.
+
+**Q-104 In regards to Terraform state file, select all the statements below which are correct: (select four)**
+
+A. the state file is always encrypted at rest
+`B. when using local state, the state file is stored in plain-text`
+`C. storing state remotely can provide better security`
+`D. the Terraform state can contain sensitive data, therefore the state file should be protected from unauthorized access`
+E. using the sensitive = true feature, you can instruct Terraform to mask sensitive data in the state file
+`F. HCP Terraform always encrypts state at rest`
+
+**Q-105 When using variables in HCP Terraform, what level of scope can the variable be applied to? (select three)**
+
+`A. All current and future workspaces in a project using a variable set`
+
+- `This level of scope ensures that the variables are available to any new workspaces created within the project, maintaining consistency and standardization across all workspaces.`
+
+`B. A specific Terraform run in a single workspace`
+`C. Multiple workspaces using a variable set`
+
+- `This approach simplifies management and ensures that the same variable values are used across all workspaces that are part of the variable set.`
+
+D. All workspaces across multiple HCP Terraform organizations.
+
+
