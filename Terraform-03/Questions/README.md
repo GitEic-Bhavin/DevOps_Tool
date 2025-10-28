@@ -1387,4 +1387,12 @@ E. using the sensitive = true feature, you can instruct Terraform to mask sensit
 
 D. All workspaces across multiple HCP Terraform organizations.
 
+**Q-106 The command  is used to extract the output values defined in the Terraform configuration.**
 
+- Ans. `terraform output`
+
+**Q-107 There are multiple ways to provide sensitive values when using Terraform. However, sensitive information provided in your configuration can be written to the state file, which is not desirable. Which method below will not result in sensitive information being written to the state file ?**
+
+- Ans. `you use AWS Secrets Manager, Azure Key Vault, or HashiCorp Vault. The method that will not result in the sensitive information being written to the state file is using a Terraform data source to fetch the secret from HashiCorp Vault.`
+
+**Q-108 
