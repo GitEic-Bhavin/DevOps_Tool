@@ -615,7 +615,7 @@ resource "aws_instance" "web" {
 }
 ```
 
-**`If you want to know use case and key diff between `for_each` and `dynamic` block , go to [for_each dynamic](https://github.com/GitEic-Bhavin/DevOps_Tool/blob/master/Terraform-03/dynamic-block/README.md)`**.
+**If you want to know use case and key diff between `for_each` and `dynamic` block** , go to [for_each dynamic](https://github.com/GitEic-Bhavin/DevOps_Tool/blob/master/Terraform-03/dynamic-block/README.md).
 
 Map Data Types
 ---
